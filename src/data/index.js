@@ -34,4 +34,28 @@ const user3 = {
     email: "DanRom@gmail.com",
     address: "522 Sesame Ave, Hollywood CA",
   };
-export const users = [user1, user2,user3];
+  const user4 = {
+    user_id: 126,
+    username: "PeachesAndCream22",
+    firstname: "Patrick",
+    lastname: "Smith",
+    profilepic:
+      "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg",
+    role: "Tutor",
+    phone: "5104567789",
+    email: "PeachesCream@gmail.com",
+    address: "133 Peanut Ave, Hollywood CA",
+  };
+  const user5 = {
+    user_id: 127,
+    username: "IrishWiskey",
+    firstname: "Kevin",
+    lastname: "Newsome",
+    profilepic:
+      "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg",
+    role: "Highschool Friend",
+    phone: "5107774543",
+    email: "KevinB22@gmail.com",
+    address: "23 Apple St, Hollywood CA",
+  };
+export const users = [user1, user2,user3,user4,user5];
