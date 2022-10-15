@@ -1,32 +1,30 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
-import { InputBase, Typography } from "@mui/material";
+import { InputBase } from "@mui/material";
 
 const ENTER_KEY_CODE = 13;
-const DEFAULT_LABEL_PLACEHOLDER = "Click To Edit";
-let inputRef2 = null as any;
+
 const EditableLabel = ({
   onFocus = () => {},
   onBlur = () => {},
   multiline = false,
-  setValue,
-  value,
   placeholder,
   color = "default",
   fontSize = 16,
   canEdit = true,
+  initialVal='',
   ...props
 }: {
   multiline?: boolean;
   color?: "gray" | "default";
   onFocus: any;
   onBlur: any;
-  setValue: any;
   placeholder?: any;
-  value: any;
   fontSize?: number;
   canEdit?: boolean;
+  initialVal?:string;
 }) => {
+  const [value,setValue]=useState(initialVal)
   const [isEditing, setEditing] = useState(false);
   const inputRef = useRef<any>(null);
 
@@ -57,9 +55,12 @@ const EditableLabel = ({
   const handleEnterKey = () => {
     handleFocus();
   };
-  const labelText = isTextValueValid()
-    ? value
-    : placeholder || DEFAULT_LABEL_PLACEHOLDER;
+  useEffect(() => {
+    setEditing(false);
+    setValue(initialVal)
+    //inputRef.current = null;
+  }, [initialVal]);
+  const labelText = value
   if (isEditing) {
     return (
       <InputBase
@@ -83,11 +84,11 @@ const EditableLabel = ({
       />
     );
   }
-  const useColor = color === "gray" ? "GrayText" : undefined;
 
-  console.log("inputref2", inputRef2);
+
   return (
     <InputBase
+    key={value}
       color="secondary"
       onFocus={() => {
         if (canEdit) {
@@ -95,7 +96,7 @@ const EditableLabel = ({
         }
       }}
       onBlur={() => {
-        //inputRef2.placeholder = "caca2";
+
       }}
       multiline={multiline}
       sx={{
@@ -105,6 +106,7 @@ const EditableLabel = ({
         height: multiline ? undefined : 25,
       }}
       value={labelText}
+      placeholder={placeholder}
       type="text"
     />
   );
