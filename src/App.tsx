@@ -4,7 +4,11 @@ import "./App.css";
 import Contacts from "./Containers/Contacts";
 import Profile from "./Containers/Profile";
 import { Stack } from "@mui/system";
-
+import { useQbSession } from "./Quickblox/useQbSession";
+const Hooks=()=>{
+  useQbSession()
+  return <></>
+}
 function App() {
   return (
     <div className="App">
@@ -12,6 +16,7 @@ function App() {
         <Contacts />
         <Profile />
       </Stack>
+      <Hooks/>
     </div>
   );
 }
