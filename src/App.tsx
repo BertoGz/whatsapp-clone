@@ -1,22 +1,22 @@
-import React from "react";
-import { Divider } from "@mui/material";
 import "./App.css";
-import Contacts from "./Containers/Contacts";
-import Profile from "./Containers/Profile";
-import { Stack } from "@mui/system";
 import { useQbSession } from "./Quickblox/useQbSession";
-const Hooks=()=>{
-  useQbSession()
-  return <></>
-}
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./Containers/Login";
+import Auth from "./Containers/Auth";
+const Hooks = () => {
+  useQbSession();
+  return <></>;
+};
 function App() {
   return (
     <div className="App">
-      <Stack direction="row" divider={<Divider />}>
-        <Contacts />
-        <Profile />
-      </Stack>
-      <Hooks/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/user" element={<Auth />} />
+        </Routes>
+      </BrowserRouter>
+      <Hooks />
     </div>
   );
 }
