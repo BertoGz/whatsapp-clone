@@ -6,17 +6,102 @@ import {
   TextField,
   ButtonBase,
   Grid,
+  FormControl,
+  FormHelperText,
 } from "@mui/material";
 import { Box } from "@mui/system";
-
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import image from "../../Files/splashImage.png";
 import logo from "../../Files/logo.png";
-
+import {
+  useMutationCreateUser,
+  createUserErrorStates,
+  useMutationLoginUser,
+  loginUserErrorStates,
+} from "../../ReactQuery";
+import { useNavigate } from "react-router-dom";
+import { FirebaseActions } from "../../Firebase";
 const SignInContents = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { mutateAsync: loginMutation } = useMutationLoginUser();
+  const { mutateAsync: createUserMutation } = useMutationCreateUser();
+  function onLogin(isEmailSignin = false) {
+    /*  if (window.localStorage.getItem('userToken')){
+
+    }*/
+    loginMutation(
+      { isEmailSignin, email: emailInput, password: passwordInput },
+      {
+        onSuccess: () => {
+          navigate("user");
+        },
+        onError: (res) => {
+          setError(res);
+        },
+      }
+    );
+  }
+  // auto login
+  useEffect(() => {
+    const isSignInWithEmailLink = FirebaseActions.isSignInWithEmailLink();
+    onLogin(isSignInWithEmailLink);
+  }, []);
+  async function onConfirmCredential() {
+    setError(null);
+    if (isSignUp) {
+      createUserMutation(
+        { email: emailInput, password: passwordInput },
+        {
+          onSuccess: () => {
+            navigate("user");
+          },
+          onError: (res) => {
+            setError(res);
+          },
+        }
+      );
+    } else {
+      //todo create user mutation
+      onLogin();
+    }
+  }
+  const checkEmailError = useMemo(() => {
+    if (isSignUp) {
+      return (
+        error === createUserErrorStates.emailInUse ||
+        error === createUserErrorStates.invalidEmail
+      );
+    } else {
+      return error === loginUserErrorStates.incorrectCredentials;
+    }
+  }, [error, isSignUp]);
+  const checkPasswordError = useMemo(() => {
+    if (isSignUp) {
+      return error === createUserErrorStates.weakPassword;
+    } else {
+      return error === loginUserErrorStates.incorrectCredentials;
+    }
+  }, [error, isSignUp]);
+
+  const getErrorMessage = useMemo(() => {
+    switch (error) {
+      case createUserErrorStates.emailInUse:
+        return "An account with that email already exists";
+      case createUserErrorStates.invalidEmail:
+        return "Please enter a valid email";
+      case createUserErrorStates.weakPassword:
+        return "Please use a password that is 6 or more characters in length";
+      case loginUserErrorStates.incorrectCredentials:
+        return "Incorrect password or email";
+      case createUserErrorStates.networkError:
+      case loginUserErrorStates.networkError:
+        return "There is a network error";
+    }
+  }, [error]);
   return (
     <Box
       sx={{
@@ -54,24 +139,39 @@ const SignInContents = () => {
         <Typography textAlign="left">
           {isSignUp ? "SIGN UP" : "LOGIN"}
         </Typography>
-        <TextField
-          value={emailInput}
-          onChange={(e) => {
-            setEmailInput(e.target.value);
-          }}
-          placeholder="Email"
-          variant="filled"
-        />
-        <TextField
-          value={passwordInput}
-          onChange={(e) => {
-            setPasswordInput(e.target.value);
-          }}
-          placeholder="Password"
-          variant="filled"
-          type="password"
-        />
-        <Button variant="contained"> {isSignUp ? "SIGN UP" : "LOGIN"}</Button>
+
+        <FormControl error={checkEmailError}>
+          <TextField
+            value={emailInput}
+            onChange={(e) => {
+              setEmailInput(e.target.value);
+            }}
+            placeholder="Email"
+            variant="filled"
+          />
+          {checkEmailError && (
+            <FormHelperText>{getErrorMessage}</FormHelperText>
+          )}
+        </FormControl>
+        <FormControl error={checkPasswordError}>
+          <TextField
+            value={passwordInput}
+            onChange={(e) => {
+              setPasswordInput(e.target.value);
+            }}
+            placeholder="Password"
+            variant="filled"
+            type="password"
+          />
+          {checkPasswordError && (
+            <FormHelperText>{getErrorMessage}</FormHelperText>
+          )}
+        </FormControl>
+        <Button variant="contained" onClick={onConfirmCredential}>
+          {" "}
+          {isSignUp ? "SIGN UP" : "LOGIN"}
+        </Button>
+
         {isSignUp && (
           <>
             <Typography sx={{ padding: "40px" }}>
