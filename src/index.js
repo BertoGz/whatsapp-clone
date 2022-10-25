@@ -7,11 +7,14 @@ import { Provider } from "react-redux";
 import { store } from "./Redux/store";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./ReactQuery";
+import { ReactQueryDevtools } from "react-query/devtools";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
       <App />
+      {true && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   </Provider>
 );
