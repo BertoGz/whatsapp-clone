@@ -3,7 +3,7 @@ import { queryClient } from "..";
 import { FirebaseActions } from "../../Firebase";
 import { getCustomToken } from "../../Requests";
 type TypeParamsUserLogin = {
-  isEmailSignin: boolean;
+  isEmailLinkSignin: boolean;
   email: string;
   password: string;
 };
@@ -19,19 +19,22 @@ type errorTypes =
 
 async function loginUserFn(loginParams: TypeParamsUserLogin) {
   let response;
-  const userHasToken = window.localStorage.getItem("userToken");
-  //window.localStorage.removeItem("userToken");
-  console.log("!!@@was here 222");
-  debugger;
-  if (loginParams.isEmailSignin) {
+  const user = await FirebaseActions.getCurrentUser(); //window.localStorage.getItem("accessToken");
+  debugger
+  //window.localStorage.removeItem("accessToken");
+  //window.localStorage.remoteItem("refreshToken")
+
+  if (loginParams.isEmailLinkSignin) {
     response = await FirebaseActions.signInWithEmailLink();
-  } else if (userHasToken) {
-    response = await FirebaseActions.signInWithCustomToken(userHasToken);
+  } else if (user) {
+    response = { data: user, status: 1 }; //await FirebaseActions.signInWithCustomToken(hasAccessToken);
+    debugger;
   } else if (loginParams?.email && loginParams?.password) {
     response = await FirebaseActions.signInUser(
       loginParams.email,
       loginParams.password
     );
+    debugger;
   } else {
     return Promise.reject(loginUserErrorStates.networkError);
   }
@@ -43,13 +46,15 @@ async function loginUserFn(loginParams: TypeParamsUserLogin) {
     debugger;
     //window.localStorage.setItem('userToken',response.data)
     //const token = await FirebaseActions.getIdToken(response.data);
-    const { uid } = response.data || {};
-    debugger;
-    const token = await getCustomToken(uid);
-    debugger;
-    if (token.status === 1) {
-      window.localStorage.setItem("userToken", token.data);
-    }
+    // const { uid } = response.data || {};
+    //const { accessToken, refreshToken } = response?.data?.stsTokenManager || {};
+    //window.localStorage.setItem("accessToken", accessToken);
+    //window.localStorage.setItem("refreshToken", refreshToken);
+    //const token = await getCustomToken(uid);
+    //debugger;
+    //if (token.status === 1) {
+    ///  window.localStorage.setItem("userToken", token.data);
+    //}
     queryClient.setQueryData("userData", response.data);
     return Promise.resolve(response.data);
   } else {
