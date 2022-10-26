@@ -21,6 +21,8 @@ import {
 } from "../../ReactQuery";
 import { useNavigate } from "react-router-dom";
 import { FirebaseActions } from "../../Firebase";
+import { getAuth } from "firebase/auth";
+const auth = getAuth();
 const SignInContents = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [emailInput, setEmailInput] = useState("");
@@ -29,14 +31,12 @@ const SignInContents = () => {
   const navigate = useNavigate();
   const { mutateAsync: loginMutation } = useMutationLoginUser();
   const { mutateAsync: createUserMutation } = useMutationCreateUser();
-  function onLogin(isEmailSignin = false) {
-    /*  if (window.localStorage.getItem('userToken')){
-
-    }*/
+  function onLogin(isEmailLinkSignin = false) {
     loginMutation(
-      { isEmailSignin, email: emailInput, password: passwordInput },
+      { isEmailLinkSignin, email: emailInput, password: passwordInput },
       {
         onSuccess: () => {
+          debugger;
           navigate("user");
         },
         onError: (res) => {
@@ -48,7 +48,16 @@ const SignInContents = () => {
   // auto login
   useEffect(() => {
     const isSignInWithEmailLink = FirebaseActions.isSignInWithEmailLink();
-    onLogin(isSignInWithEmailLink);
+    auth.onAuthStateChanged((user) => {
+      if (user && !isSignInWithEmailLink) {
+        onLogin(isSignInWithEmailLink);
+      }
+    });
+
+  
+    if (isSignInWithEmailLink) {
+      onLogin(isSignInWithEmailLink);
+    }
   }, []);
   async function onConfirmCredential() {
     setError(null);
