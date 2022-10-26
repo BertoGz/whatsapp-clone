@@ -7,10 +7,9 @@ import {
   isSignInWithEmailLink as FBisSignInWithEmailLink,
   signInWithEmailLink as FBsignInWithEmailLink,
   signInWithCustomToken as FBsignInWithCustomToken,
-  getIdToken as FBgetIdToken,
-  User,
+  signOut as FBsignOut,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { createUserEndpoint } from "../Requests";
 // Follow this pattern to import other Firebase services
 // import { } from 'firebase/<service>';
 
@@ -33,13 +32,22 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const auth = getAuth();
 
 console.log("auth", auth);
 export const FirebaseActions = {
+  signOutUser: () => {
+    return FBsignOut(auth);
+  },
   createUser: (email: string, password: string) => {
-    return createUserEndpoint({ email, password });
+    return createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        return { data: userCredential.user, status: 1 };
+      })
+      .catch((error) => {
+        return { data: error, status: 0 };
+      });
   },
   signInUser: (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password)
@@ -100,7 +108,8 @@ export const FirebaseActions = {
       }
     );
   },
-  getIdToken: (user: User) => {
-    return FBgetIdToken(user, true);
+  getCurrentUser: () => {
+    //debugger
+    return auth.currentUser;
   },
 };
