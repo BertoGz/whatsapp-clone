@@ -10,7 +10,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import image from "../../Files/splashImage.png";
 import logo from "../../Files/logo.png";
 import {
@@ -20,9 +20,7 @@ import {
   loginUserErrorStates,
 } from "../../ReactQuery";
 import { useNavigate } from "react-router-dom";
-import { FirebaseActions } from "../../Firebase";
-import { getAuth } from "firebase/auth";
-const auth = getAuth();
+
 const SignInContents = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [emailInput, setEmailInput] = useState("");
@@ -45,20 +43,7 @@ const SignInContents = () => {
       }
     );
   }
-  // auto login
-  useEffect(() => {
-    const isSignInWithEmailLink = FirebaseActions.isSignInWithEmailLink();
-    auth.onAuthStateChanged((user) => {
-      if (user && !isSignInWithEmailLink) {
-        onLogin(isSignInWithEmailLink);
-      }
-    });
 
-  
-    if (isSignInWithEmailLink) {
-      onLogin(isSignInWithEmailLink);
-    }
-  }, []);
   async function onConfirmCredential() {
     setError(null);
     if (isSignUp) {
