@@ -69,7 +69,6 @@ const Auth = () => {
             >
               Logout
             </Button>
-       
           </Box>
         </Stack>
       </>
@@ -80,6 +79,19 @@ const Auth = () => {
       <Stack direction="row" divider={<Divider />}>
         <Contacts />
         <Profile />
+        <Button
+          onClick={() => {
+            if (email) {
+              signOutMutation(null, {
+                onSuccess: () => {
+                  navigate("/");
+                },
+              });
+            }
+          }}
+        >
+          Logout
+        </Button>
       </Stack>
     </>
   );
