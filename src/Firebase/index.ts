@@ -3,12 +3,12 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithEmailAndPassword,
-  sendSignInLinkToEmail,
   isSignInWithEmailLink as FBisSignInWithEmailLink,
   signInWithEmailLink as FBsignInWithEmailLink,
   signInWithCustomToken as FBsignInWithCustomToken,
   signOut as FBsignOut,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
 // Follow this pattern to import other Firebase services
 // import { } from 'firebase/<service>';
@@ -75,7 +75,11 @@ export const FirebaseActions = {
       // This must be true.
       handleCodeInApp: true,
     };
-    return sendSignInLinkToEmail(auth, email, actionCodeSettings)
+    const user = auth.currentUser;
+    if (!user) {
+      return;
+    }
+    return sendEmailVerification(user, actionCodeSettings)
       .then(() => {
         // The link was successfully sent. Inform the user.
         // Save the email locally so you don't need to ask the user for it again
