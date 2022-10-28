@@ -3,8 +3,10 @@ import { useQbSession } from "./Quickblox/useQbSession";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Containers/Login";
 import Auth from "./Containers/Auth";
+import { useAutoLogin } from "./Hooks/useAutoLogin";
 const Hooks = () => {
   useQbSession();
+  useAutoLogin()
   return <></>;
 };
 function App() {
