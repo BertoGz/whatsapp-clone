@@ -6,7 +6,7 @@ import Auth from "./Containers/Auth";
 import { useAutoLogin } from "./Hooks/useAutoLogin";
 const Hooks = () => {
   useQbSession();
-  useAutoLogin()
+  useAutoLogin();
   return <></>;
 };
 function App() {
@@ -17,8 +17,8 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/user" element={<Auth />} />
         </Routes>
+        <Hooks />
       </BrowserRouter>
-      <Hooks />
     </div>
   );
 }
