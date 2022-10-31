@@ -2,7 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   qbInitialized: null,
-} as { qbInitialized: boolean | null };
+  appSessionValid: null,
+  userSessionValid: null,
+  qbServiceFailure: false,
+  chatConnected: false,
+  webRtcConnected: false,
+  chatListenersInit:false
+} as {
+  qbInitialized: boolean | null;
+  appSessionValid: boolean | null;
+  userSessionValid: boolean | null;
+  qbServiceFailure: boolean;
+  chatConnected: boolean;
+  webRtcConnected: boolean;
+  chatListenersInit:boolean
+};
 const Quickblox = createSlice({
   name: "quickblox",
   initialState,
@@ -13,11 +27,46 @@ const Quickblox = createSlice({
     setQbInitFailure: (state) => {
       state.qbInitialized = false;
     },
+    setAppSessionValid: (state) => {
+      state.appSessionValid = true;
+    },
+    setAppSessionInvalid: (state) => {
+      state.appSessionValid = false;
+    },
+    setUserSessionValid: (state) => {
+      state.userSessionValid = true;
+    },
+    setUserSessionInValid: (state) => {
+      state.userSessionValid = false;
+    },
+    setQbServiceFailure: (state) => {
+      state.qbServiceFailure = true;
+    },
+    setChatConnected: (state, action) => {
+      state.chatConnected = action.payload;
+    },
+    setWebRtcConnected: (state, action) => {
+      state.webRtcConnected = action.payload;
+    },
+    setChatListenersInit:(state)=>{
+      state.chatListenersInit = true
+    },
     resetState: (state) => {
       state = initialState;
     },
   },
 });
-export const { setQbInitSuccess, setQbInitFailure, resetState } =
-  Quickblox.actions;
+export const {
+  setQbInitSuccess,
+  setQbInitFailure,
+  setAppSessionValid,
+  setAppSessionInvalid,
+  setUserSessionValid,
+  setUserSessionInValid,
+  setQbServiceFailure,
+  setChatConnected,
+  setWebRtcConnected,
+  setChatListenersInit,
+  resetState,
+} = Quickblox.actions;
 export default Quickblox.reducer;
