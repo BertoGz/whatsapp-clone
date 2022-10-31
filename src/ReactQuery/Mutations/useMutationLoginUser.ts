@@ -24,13 +24,11 @@ async function loginUserFn(loginParams: TypeParamsUserLogin) {
     response = await FirebaseActions.signInWithEmailLink();
   } else if (user) {
     response = { data: user, status: 1 }; //await FirebaseActions.signInWithCustomToken(hasAccessToken);
-    debugger;
   } else if (loginParams?.email && loginParams?.password) {
     response = await FirebaseActions.signInUser(
       loginParams.email,
       loginParams.password
     );
-    debugger;
   } else {
     return Promise.reject(loginUserErrorStates.networkError);
   }
@@ -43,7 +41,6 @@ async function loginUserFn(loginParams: TypeParamsUserLogin) {
     return Promise.resolve(response.data);
   } else {
     const { code } = response.data;
-    debugger;
     if (code === "asd") {
       // alert("Incorrect login credentials");
       return Promise.reject(response.data);
