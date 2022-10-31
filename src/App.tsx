@@ -3,10 +3,13 @@ import { useQbSession } from "./Quickblox/useQbSession";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Containers/Login";
 import Auth from "./Containers/Auth";
-import { useAutoLogin } from "./Hooks/useAutoLogin";
+import { useFirebaseAutoLogin } from "./Hooks/useFirebaseAutoLogin";
+import { useQbChat } from "./Quickblox/useQbChat";
+import DebugMenu from "./Containers/DebugMenu";
 const Hooks = () => {
+  useFirebaseAutoLogin();
   useQbSession();
-  useAutoLogin();
+  useQbChat()
   return <></>;
 };
 function App() {
@@ -17,6 +20,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/user" element={<Auth />} />
         </Routes>
+        <DebugMenu/>
         <Hooks />
       </BrowserRouter>
     </div>
