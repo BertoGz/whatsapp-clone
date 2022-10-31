@@ -4,7 +4,7 @@ import { useMutationLoginUser } from "../ReactQuery";
 import { FirebaseActions } from "../Firebase";
 import { getAuth } from "firebase/auth";
 const auth = getAuth();
-export const useAutoLogin = () => {
+export const useFirebaseAutoLogin = () => {
   const { mutateAsync: loginMutation } = useMutationLoginUser();
   const navigate = useNavigate();
   function onAutoLogin(isEmailLinkSignin = false) {
