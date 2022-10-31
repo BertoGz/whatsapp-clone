@@ -75,25 +75,25 @@ const Auth = () => {
     );
   }
   return (
-    <>
+    <Stack direction="column">
       <Stack direction="row" divider={<Divider />}>
         <Contacts />
         <Profile />
-        <Button
-          onClick={() => {
-            if (email) {
-              signOutMutation(null, {
-                onSuccess: () => {
-                  navigate("/");
-                },
-              });
-            }
-          }}
-        >
-          Logout
-        </Button>
       </Stack>
-    </>
+      <Button
+        onClick={() => {
+          if (email) {
+            signOutMutation(null, {
+              onSuccess: () => {
+                navigate("/");
+              },
+            });
+          }
+        }}
+      >
+        Logout
+      </Button>
+    </Stack>
   );
 };
 export default Auth;
