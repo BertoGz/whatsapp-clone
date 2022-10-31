@@ -32,22 +32,24 @@ const DebugMenu = () => {
       style={{
         display: "flex",
         position: "absolute",
-        left: 0,
-        right: 0,
-        bottom: 0,
-        top: 0,
+        width:'100%',
         justifyContent: "flex-end",
         alignItems: "flex-end",
         pointerEvents: "none",
       }}
     >
-      <Button
-        onClick={handleToggleModal}
-        sx={{ opacity: 0.5, pointerEvents: "all" }}
-        variant="contained"
+      <Box
+        sx={{
+          display:'flex',
+          flex: 1,
+          justifyContent: "flex-end",
+          backgroundColor: "GrayText",
+          pointerEvents: "all",
+          px: 1,
+        }}
       >
-        Debug Menu
-      </Button>
+        <PressableText onClick={handleToggleModal}>Debug Menu</PressableText>
+      </Box>
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -59,7 +61,7 @@ const DebugMenu = () => {
           horizontal: "right",
         }}
       >
-        <Paper sx={{ p: 2, backgroundColor: "rgb(150,150,150)" }}>
+        <Paper sx={{ p: 2, backgroundColor: "GrayText" }}>
           <Stack direction="row">
             <FormHelperText>(Dev) Debug Menu</FormHelperText>
             <Bolt />
@@ -68,7 +70,7 @@ const DebugMenu = () => {
             <PressableText onClick={onTryDisconnectChat}>
               Disconnect Quickblox Chat
             </PressableText>
-            <Divider variant="fullWidth"  />
+            <Divider variant="fullWidth" />
             <PressableText onClick={handleToggleModal}>
               Close Menu
             </PressableText>
