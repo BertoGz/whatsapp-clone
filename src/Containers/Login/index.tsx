@@ -34,7 +34,6 @@ const SignInContents = () => {
       { isEmailLinkSignin, email: emailInput, password: passwordInput },
       {
         onSuccess: () => {
-          debugger;
           navigate("user");
         },
         onError: (res) => {
