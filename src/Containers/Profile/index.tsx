@@ -12,7 +12,9 @@ import EditableLabel from "../../Components/EditableLabel";
 import { Box } from "@mui/system";
 import { users } from "../../Data";
 import { useAppSelector } from "../../Redux/useAppSelector";
-
+import { useQueryContact } from "../../ReactQuery";
+const profilepic =
+  "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
 //const settings = [{type:'email',}];
 const BaseInfo = ({
   val = "",
@@ -25,9 +27,7 @@ const BaseInfo = ({
   canEdit?: boolean;
   type: "email" | "phone" | "address" | "username" | "";
 }) => {
-
- // const [infoLabel, setInfoLabel] = useState(label);
-
+  // const [infoLabel, setInfoLabel] = useState(label);
 
   const GetIcon = () => {
     switch (type) {
@@ -140,33 +140,22 @@ const BaseInfo = ({
 
 const Profile = () => {
   const { selectedProfile } = useAppSelector((state) => state.AppState);
-  let user = null;
-  if (selectedProfile) {
-    const foundUser = users.find((user) => user.user_id === selectedProfile);
-    if (foundUser) {
-      user = foundUser;
-    }
+  const { data } = useQueryContact(selectedProfile);
+  if (!data) {
+    return <></>;
   }
-  const {
-    profilepic,
-    firstname,
-    lastname,
-    username,
-    role,
-    phone,
-    email,
-    address,
-  } = user || {};
+  const { items } = data || {};
+  const { full_name, email, phone } = items[0] || {};
   if (selectedProfile) {
     return (
       <Stack direction="column" divider={<Divider />} flex={1}>
         <Stack alignItems={"center"}>
           <Avatar sx={{ height: 100, width: 100 }} src={profilepic} />
           <Typography variant="h5" fontWeight={"bold"}>
-            {firstname} {lastname}
+            {full_name}
           </Typography>
           <Typography color="GrayText" variant="h6" fontWeight={"600"}>
-            {role}
+            {email}
           </Typography>
         </Stack>
 
@@ -179,21 +168,23 @@ const Profile = () => {
         >
           <Grid item>
             <BaseInfo
-              val={username}
+              val={full_name}
               label="username"
               type="username"
               canEdit={false}
             />
           </Grid>
           <Grid item>
-            <BaseInfo val={phone} label="home phone" type="phone" />
+            <BaseInfo val={`${phone}`} label="home phone" type="phone" />
           </Grid>
           <Grid item>
             <BaseInfo val={email} label="work email" type="email" />
           </Grid>
-          <Grid item>
-            <BaseInfo val={address} label="home address" type="address" />
-          </Grid>
+          {false && (
+            <Grid item>
+              <BaseInfo val={"address"} label="home address" type="address" />
+            </Grid>
+          )}
         </Grid>
       </Stack>
     );
