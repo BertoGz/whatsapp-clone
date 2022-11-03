@@ -1,7 +1,7 @@
 import * as QB from "quickblox/quickblox";
 import { useEffect } from "react";
 import { PromisedQb } from ".";
-import { useQueryUserData } from "../ReactQuery/Queries/useQueryUserData";
+import { useQueryFirebaseUserData } from "../ReactQuery";
 import {
   setAppSessionInvalid,
   setAppSessionValid,
@@ -18,7 +18,7 @@ var ACCOUNT_KEY = "ub3Nry9YQWQHnWQqLKez";
 var CONFIG = { debug: false };
 
 export const useQbSession = () => {
-  const { data: userData } = useQueryUserData();
+  const { data: userData } = useQueryFirebaseUserData();
   const { email, uid } = userData || {};
   const { qbInitialized, appSessionValid, userSessionValid } = useAppSelector(
     (state) => state.Quickblox
@@ -41,6 +41,7 @@ export const useQbSession = () => {
   async function tryCreateUserSession() {
     // check if application session has been created
     const session = await PromisedQb.getSession();
+    //debugger
     console.log("!!@@session", session);
     // early return if user session exists
     if (session?.application_id && session?.user_id !== 0 && session?.user_id) {
@@ -74,6 +75,7 @@ export const useQbSession = () => {
       if (userExists === false) {
         const createParams = {
           login: email,
+          email,
           password: uid,
           full_name: "QuickBlox Test",
         };
@@ -101,6 +103,7 @@ export const useQbSession = () => {
 
   useEffect(() => {
     if (appSessionValid && !userSessionValid) {
+    //  debugger
       tryCreateUserSession();
     }
   }, [appSessionValid, userSessionValid]);
