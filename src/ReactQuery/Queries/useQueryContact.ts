@@ -2,8 +2,9 @@ import { useQuery } from "react-query";
 import { clientData } from "..";
 import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
-const key = "contacts";
-export const useQueryContacts = () => {
+
+export const useQueryContact = (id: number) => {
+  const key = ["contacts", id];
   const chatConnected = useAppSelector(
     (state) => state.Quickblox.chatConnected
   );
@@ -15,21 +16,13 @@ export const useQueryContacts = () => {
     key,
     async () => {
       try {
-        const contacts = await PromisedQb.getRoster();
-
-        const contactKeys = Object.keys(contacts).map((key) =>
-          parseInt(key, 10)
-        );
-        if (contactKeys?.length === 0) {
-          return [];
-        }
         //const contactKeysJoined = contactKeys.join();
-        const filter = { field: "id", param: "in", value: contactKeys };
+        const filter = { field: "id", param: "eq", value: id };
         //field_type+field_name+operator+value'
         // debugger;
         const params = {
           page: 1,
-          per_page: 1000,
+          per_page: 1,
           filter,
         };
         const contactData = await PromisedQb.listUsers(params);
@@ -41,7 +34,7 @@ export const useQueryContacts = () => {
       } catch (e) {}
     },
     {
-      enabled: chatConnected,
+      enabled: chatConnected && !!id,
       keepPreviousData: true,
     }
   );
