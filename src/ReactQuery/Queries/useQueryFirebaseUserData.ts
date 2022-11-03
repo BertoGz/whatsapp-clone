@@ -1,17 +1,17 @@
 import { useQuery } from "react-query";
 import { clientData } from "..";
 
-const key = "userData";
-export const useQueryUserData = () => {
+const key = "firebaseUserData";
+export const useQueryFirebaseUserData = () => {
   const query = useQuery(
     key,
     async () => {
-      const userData = clientData.getUserData();
+      const userData = clientData.getFirebaseUserData();
       return userData;
     },
     {
       initialData: () => {
-        const userData = clientData.getUserData();
+        const userData = clientData.getFirebaseUserData();
         return userData;
       },
     }

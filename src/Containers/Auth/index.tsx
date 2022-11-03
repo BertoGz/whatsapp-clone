@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { useQueryUserData } from "../../ReactQuery/Queries/useQueryUserData";
+import { useQueryFirebaseUserData } from "../../ReactQuery";
 import Contacts from "../Contacts";
 import Profile from "../Profile";
 import logo from "../../Files/logo.png";
@@ -16,7 +16,7 @@ import { useMutationLogout } from "../../ReactQuery/Mutations/useMutationLogout"
 import { useNavigate } from "react-router-dom";
 const Auth = () => {
   const navigate = useNavigate();
-  const { data: userData } = useQueryUserData();
+  const { data: userData } = useQueryFirebaseUserData();
   const { mutateAsync: signOutMutation } = useMutationLogout();
   const { emailVerified, email } = userData || {};
   console.log("!!!userData", userData);
