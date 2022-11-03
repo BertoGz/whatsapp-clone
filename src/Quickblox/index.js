@@ -85,7 +85,7 @@ export const PromisedQb = {
     return new Promise(async (res, rej) => {
       try {
         QB.chat.roster.add(userId, (data) => {
-          debugger;
+       //   debugger;
           res(data);
         });
       } catch (e) {
@@ -96,16 +96,29 @@ export const PromisedQb = {
       }
     });
   },
+  confirmAddRoster: async (userId) => {
+    return new Promise(async (res, rej) => {
+      try {
+        QB.chat.roster.confirm(userId, (error, response) => {
+          if (!error) {
+            res(1);
+          }
+        });
+      } catch (e) {
+        rej(e);
+      }
+    });
+  },
   listUsers: async (params) => {
     return new Promise((res, rej) => {
       return QB.users.listUsers(params, (error, response) => {
         if (error) {
           console.log(error);
-          debugger
+          debugger;
           rej(error);
         } else {
           console.log(response);
-          debugger
+       //   debugger;
           res(response);
         }
       });
@@ -194,6 +207,7 @@ export function InitQbChatListeners() {
   QB.chat.onDisconnectedListener = onDisconnectedListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
   QB.chat.onConfirmSubscribeListener = onConfirmSubscribeListener;
+  QB.chat.onSubscribeListener = onSubscribeListener;
   /* QB.chat.onReconnectListener = onReconnectListener;
   QB.chat.onDisconnectedListener = onDisconnectedListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
