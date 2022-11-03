@@ -26,9 +26,11 @@ export const PromisedQb = {
     return new Promise((res, rej) => {
       return QB.users.create(params, function (error, sesh) {
         if (error) {
+          // debugger;
           rej(error);
           //done.fail("Create user error: " + JSON.stringify(error));
         } else {
+          //  debugger;
           res(sesh);
         }
       });
@@ -39,8 +41,10 @@ export const PromisedQb = {
     return new Promise((res, rej) => {
       return QB.login(params, (error, sesh) => {
         if (error) {
+          //  debugger;
           rej(error);
         } else {
+          //  debugger;
           res(sesh);
         }
       });
@@ -50,7 +54,7 @@ export const PromisedQb = {
     return new Promise((res, rej) => {
       return QB.chat.connect(params, (error, sesh) => {
         if (error) {
-          debugger;
+          //  debugger;
           rej(error);
         } else {
           // debugger
@@ -62,8 +66,55 @@ export const PromisedQb = {
   chatDisconnect: async () => {
     return QB.chat.disconnect();
   },
+  getRoster: async () => {
+    return new Promise(async (res, rej) => {
+      try {
+        await QB.chat.roster.get((contactList) => {
+          console.log("contactList");
+          res(contactList);
+        });
+      } catch (e) {
+        if (e.name === "ChatNotConnectedError") {
+          // not connected to chat
+        }
+        rej(e);
+      }
+    });
+  },
+  addToRoster: async (userId) => {
+    return new Promise(async (res, rej) => {
+      try {
+        QB.chat.roster.add(userId, (data) => {
+          debugger;
+          res(data);
+        });
+      } catch (e) {
+        if (e.name === "ChatNotConnectedError") {
+          // not connected to chat
+        }
+        rej(e);
+      }
+    });
+  },
+  listUsers: async (params) => {
+    return new Promise((res, rej) => {
+      return QB.users.listUsers(params, (error, response) => {
+        if (error) {
+          console.log(error);
+          debugger
+          rej(error);
+        } else {
+          console.log(response);
+          debugger
+          res(response);
+        }
+      });
+    });
+  },
 };
-
+export const QbHelpers = {
+  //getUserJid: () => QB.chat.helpers.getUserJid(user.id, 24325),
+};
 export const connectChat = async (userCredentials = {}) => {
   //await PromisedQb.chatConnect(userCredentials);
   const isChatConnected = store.getState().Quickblox.chatConnected;
@@ -117,9 +168,9 @@ function onReconnectListener(msg) {
   console.log("##onReconnect");
 }
 function onDisconnectedListener(msg) {
-  const dispatch = store.dispatch
+  const dispatch = store.dispatch;
   console.log("##onDisconnect");
-  dispatch(setChatConnected(false))
+  dispatch(setChatConnected(false));
 }
 function onSubscribeListener(msg) {
   console.log("##onSubscribe");
