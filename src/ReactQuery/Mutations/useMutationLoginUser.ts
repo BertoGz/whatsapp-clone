@@ -37,7 +37,7 @@ async function loginUserFn(loginParams: TypeParamsUserLogin) {
     return;
   }
   if (response.status === 1) {
-    queryClient.setQueryData("userData", response.data);
+    queryClient.setQueryData("firebaseUserData", response.data);
     return Promise.resolve(response.data);
   } else {
     const { code } = response.data;
