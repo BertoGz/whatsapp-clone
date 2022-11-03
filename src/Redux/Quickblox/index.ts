@@ -7,7 +7,8 @@ const initialState = {
   qbServiceFailure: false,
   chatConnected: false,
   webRtcConnected: false,
-  chatListenersInit:false
+  chatListenersInit: false,
+  qbSession: {},
 } as {
   qbInitialized: boolean | null;
   appSessionValid: boolean | null;
@@ -15,7 +16,8 @@ const initialState = {
   qbServiceFailure: boolean;
   chatConnected: boolean;
   webRtcConnected: boolean;
-  chatListenersInit:boolean
+  chatListenersInit: boolean;
+  qbSession: any;
 };
 const Quickblox = createSlice({
   name: "quickblox",
@@ -48,8 +50,11 @@ const Quickblox = createSlice({
     setWebRtcConnected: (state, action) => {
       state.webRtcConnected = action.payload;
     },
-    setChatListenersInit:(state)=>{
-      state.chatListenersInit = true
+    setChatListenersInit: (state) => {
+      state.chatListenersInit = true;
+    },
+    setQbSession: (state, action) => {
+      state.qbSession = action.payload
     },
     resetState: (state) => {
       state = initialState;
@@ -67,6 +72,7 @@ export const {
   setChatConnected,
   setWebRtcConnected,
   setChatListenersInit,
+  setQbSession,
   resetState,
 } = Quickblox.actions;
 export default Quickblox.reducer;
