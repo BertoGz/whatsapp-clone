@@ -5,19 +5,19 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-
+const profilepic = "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg"
 const ContactListItem = ({
   item,
   onClick,
 }: {
-  item: TypeDataEntityContact;
+  item: TypeDataEntityQbUser;
   onClick: () => void;
 }) => {
-  const { profilepic, firstname, lastname, role } = item || {};
-  if (!firstname) {
+  const { full_name, email } = item || {};
+  if (!full_name) {
     return <></>;
   }
-  const fullname = `${firstname} ${lastname}`;
+  const fullname = full_name
   return (
     <ButtonBase sx={{ justifyContent: "flex-start" }} onClick={onClick}>
       <Stack
@@ -31,7 +31,7 @@ const ContactListItem = ({
           <Typography textAlign={"left"} fontWeight={"bold"}>
             {fullname}
           </Typography>
-          <Typography textAlign={"left"} color="GrayText">{role}</Typography>
+          <Typography textAlign={"left"} color="GrayText">{email}</Typography>
         </Stack>
       </Stack>
     </ButtonBase>
