@@ -56,18 +56,21 @@ export const useQbSession = () => {
       const loginParams = { login: email, password: uid };
 
       let userExists = null;
-
+      debugger
       await PromisedQb.loginUser(loginParams)
         .then(() => {
           userExists = true;
           dispatch(setUserSessionValid());
         })
         .catch((err) => {
+          debugger
           const { code } = err || {};
 
           if (code === 401) {
+            debugger
             userExists = false;
           } else {
+            debugger
             dispatch(setUserSessionInValid());
           }
         });
@@ -102,9 +105,14 @@ export const useQbSession = () => {
   }, [qbInitialized, appSessionValid]);
 
   useEffect(() => {
-    if (appSessionValid && !userSessionValid) {
+    if (appSessionValid && userSessionValid===null) {
     //  debugger
       tryCreateUserSession();
     }
   }, [appSessionValid, userSessionValid]);
+  useEffect(()=>{
+    if (userSessionValid===false){
+      alert('something went wrong while connecting to calling services')
+    }
+  },[userSessionValid])
 };
