@@ -6,7 +6,8 @@ type errorTypes = {};
 
 async function logoutFn() {
   const response = await FirebaseActions.signOutUser();
-  queryClient.setQueryData("firebaseUserData", null);
+  //queryClient.setQueryData("firebaseUserData", null);
+  queryClient.clear()
   return Promise.resolve(response);
 }
 export const useMutationLogout = () => {
