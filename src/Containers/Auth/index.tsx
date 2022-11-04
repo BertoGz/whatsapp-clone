@@ -83,6 +83,7 @@ const Auth = () => {
       <Button
         onClick={() => {
           if (email) {
+          //  debugger
             signOutMutation(null, {
               onSuccess: () => {
                 navigate("/");

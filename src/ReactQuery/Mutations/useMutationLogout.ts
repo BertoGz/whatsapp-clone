@@ -6,10 +6,10 @@ type errorTypes = {};
 
 async function logoutFn() {
   const response = await FirebaseActions.signOutUser();
-  //queryClient.setQueryData("firebaseUserData", null);
-  queryClient.clear()
-  return Promise.resolve(response);
+  queryClient.removeQueries()
+  return Promise.resolve(1);
 }
+
 export const useMutationLogout = () => {
   return useMutation<any, errorTypes, null>(logoutFn);
 };
