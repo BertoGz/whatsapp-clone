@@ -4,7 +4,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       cacheTime: Infinity,
-      refetchOnWindowFocus:false
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -21,4 +21,6 @@ export const clientData = {
     queryClient.getQueryData("firebaseUserData") as User,
   getQuickbloxUserData: () => queryClient.getQueryData("qbUserData") as any,
   getContacts: () => queryClient.getQueryData("contacts") as Array<any>,
+  getPendingContacts: () =>
+    queryClient.getQueryData("pendingContacts") as Array<any>,
 };
