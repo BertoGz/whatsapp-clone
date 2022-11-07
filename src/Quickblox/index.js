@@ -84,8 +84,8 @@ export const PromisedQb = {
   addToRoster: async (userId) => {
     return new Promise(async (res, rej) => {
       try {
-        QB.chat.roster.add(userId, (data) => {
-       //   debugger;
+        await QB.chat.roster.add(userId, (data) => {
+          //   debugger;
           res(data);
         });
       } catch (e) {
@@ -99,10 +99,25 @@ export const PromisedQb = {
   confirmAddRoster: async (userId) => {
     return new Promise(async (res, rej) => {
       try {
-        QB.chat.roster.confirm(userId, (error, response) => {
+        await QB.chat.roster.confirm(userId, (error) => {
           if (!error) {
-            res(1);
+            return res(1);
           }
+          debugger;
+        });
+      } catch (e) {
+        rej(e);
+      }
+    });
+  },
+  removeFromRoster: async (userId) => {
+    return new Promise(async (res, rej) => {
+      try {
+        QB.chat.roster.remove(userId, (error) => {
+          if (!error) {
+            return res(1);
+          }
+          debugger;
         });
       } catch (e) {
         rej(e);
@@ -118,7 +133,7 @@ export const PromisedQb = {
           rej(error);
         } else {
           console.log(response);
-       //   debugger;
+          //   debugger;
           res(response);
         }
       });
