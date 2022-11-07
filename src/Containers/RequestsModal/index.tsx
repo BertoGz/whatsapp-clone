@@ -1,12 +1,12 @@
 import { Divider, Stack, Typography } from "@mui/material";
-import { useQueryContacts } from "../../ReactQuery";
+import { useQueryPendingContacts } from "../../ReactQuery/Queries/useQueryPendingContacts";
 
 const PendingContact = ({ contact }: { contact: TypeDataEntityContact }) => {
   return <Typography></Typography>;
 };
 
 export const RequestsModal = () => {
-  const { data } = useQueryContacts();
+  const { data } = useQueryPendingContacts();
   const { items: pendingUsers } = data || {};
 
   return (
