@@ -1,24 +1,36 @@
 import React, { useState } from "react";
-import {
-  ButtonBase,
-  OutlinedInput,
-  Popover,
-} from "@mui/material";
+import { ButtonBase, OutlinedInput, Popover } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Add, AddBox, Notifications, Search } from "@mui/icons-material";
+import { AddBox, Notifications, Search } from "@mui/icons-material";
 import { RequestsModal } from "../../Containers/RequestsModal";
+import { AddContactModal } from "../../Containers/AddContactModal";
 
+let modalOpen = ''
 const SearchBar = () => {
   const [input, setInput] = useState("");
   //const [showRequestsModal, setShowRequestsModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
   function handleToggleRequestsModal(
     event: React.MouseEvent<HTMLButtonElement>
   ) {
     if (anchorEl) {
       setAnchorEl(null);
+      modalOpen ='' ;
       return;
     }
+    modalOpen = 'requests'
+    setAnchorEl(event.currentTarget);
+  }
+  function handleToggleAddContactModal(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
+    if (anchorEl) {
+      setAnchorEl(null);
+      modalOpen = '';
+      return;
+    }
+    modalOpen = 'addContact'
     setAnchorEl(event.currentTarget);
   }
   return (
@@ -33,7 +45,7 @@ const SearchBar = () => {
         }}
         startAdornment={<Search />}
       />
-      <ButtonBase>
+      <ButtonBase onClick={handleToggleAddContactModal}>
         <AddBox color="action" />
       </ButtonBase>
       <ButtonBase onClick={handleToggleRequestsModal}>
@@ -51,7 +63,8 @@ const SearchBar = () => {
           horizontal: "right",
         }}
       >
-        <RequestsModal />
+        {modalOpen === 'requests' && <RequestsModal />}
+        {modalOpen === 'addContact' && <AddContactModal />}
       </Popover>
     </Stack>
   );
