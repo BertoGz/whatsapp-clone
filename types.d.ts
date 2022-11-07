@@ -24,4 +24,5 @@ type TypeDataEntityQbUser = {
   age_over16: boolean;
   parents_contacts: string;
   user_tags: any;
+  friend:{subscription:string,ask:string}
 };
