@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { clientData } from "..";
 import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
-const key = "contacts";
+const key = ["contacts"];
 export const useQueryContacts = () => {
   const chatConnected = useAppSelector(
     (state) => state.Quickblox.chatConnected
@@ -15,26 +15,43 @@ export const useQueryContacts = () => {
     key,
     async () => {
       try {
-        const contacts = await PromisedQb.getRoster();
+        const contacts = (await PromisedQb.getRoster()) as {
+          [key: number]: { subscription: string; ask: string };
+        };
 
-        const contactKeys = Object.keys(contacts).map((key) =>
-          parseInt(key, 10)
-        );
-        if (contactKeys?.length === 0) {
+        const friendContacts = Object.keys(contacts).filter((key: any) => {
+          if (contacts[key].subscription === "both") {
+            return true;
+          }
+          return false;
+        });
+
+        // early return case
+        if (friendContacts?.length === 0) {
           return [];
         }
-        //const contactKeysJoined = contactKeys.join();
-        const filter = { field: "id", param: "in", value: contactKeys };
-        //field_type+field_name+operator+value'
+        const friendContactsInt = friendContacts.map((key) => {
+          return parseInt(key, 10);
+        });
+
         // debugger;
         const params = {
           page: 1,
           per_page: 1000,
-          filter,
+          filter: {
+            field: "id",
+            param: "in",
+            value: friendContactsInt,
+          },
         };
+        // find contact data based on connected users filter
         const contactData = await PromisedQb.listUsers(params);
         const { items }: { items: Array<any> } = contactData || {};
         let formattedData = items.map((item) => {
+          const contactListProps = contacts[item.user.id];
+          if (contactListProps) {
+            return { ...item.user, friend: contactListProps };
+          }
           return item.user;
         });
         return { ...contactData, items: formattedData || [] };
@@ -43,6 +60,9 @@ export const useQueryContacts = () => {
     {
       enabled: chatConnected,
       keepPreviousData: true,
+      initialData: () => {
+        return clientData.getContacts();
+      },
     }
   );
   return query;
