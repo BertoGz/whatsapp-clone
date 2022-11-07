@@ -1,13 +1,11 @@
 import { Bolt } from "@mui/icons-material";
 import {
   Box,
-  Button,
-  ButtonBase,
   Divider,
   FormHelperText,
   Paper,
   Popover,
-  Typography,
+  TextField,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useState } from "react";
@@ -16,6 +14,7 @@ import { PromisedQb } from "../../Quickblox";
 
 const DebugMenu = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [removeRosterInput, setRemoveRosterInput] = useState("");
   function onTryDisconnectChat() {
     PromisedQb.chatDisconnect();
   }
@@ -26,21 +25,28 @@ const DebugMenu = () => {
     }
     setAnchorEl(event.currentTarget);
   }
+  function tryRemoveFriend() {
+    PromisedQb.removeFromRoster(parseInt(removeRosterInput, 10));
+  }
 
   return (
     <div
       style={{
         display: "flex",
         position: "absolute",
-        width:'100%',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
         justifyContent: "flex-end",
         alignItems: "flex-end",
         pointerEvents: "none",
+        overflow: "hidden",
       }}
     >
       <Box
         sx={{
-          display:'flex',
+          display: "flex",
           flex: 1,
           justifyContent: "flex-end",
           backgroundColor: "GrayText",
@@ -70,6 +76,17 @@ const DebugMenu = () => {
             <PressableText onClick={onTryDisconnectChat}>
               Disconnect Quickblox Chat
             </PressableText>
+            <Stack direction="row">
+              <TextField
+                value={removeRosterInput}
+                onChange={(e) => {
+                  setRemoveRosterInput(e.target.value);
+                }}
+              />
+              <PressableText onClick={tryRemoveFriend}>
+                Remove Friend
+              </PressableText>
+            </Stack>
             <Divider variant="fullWidth" />
             <PressableText onClick={handleToggleModal}>
               Close Menu
