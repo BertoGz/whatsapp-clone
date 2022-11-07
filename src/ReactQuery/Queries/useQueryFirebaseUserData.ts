@@ -11,8 +11,7 @@ export const useQueryFirebaseUserData = () => {
     },
     {
       initialData: () => {
-        const userData = clientData.getFirebaseUserData();
-        return userData;
+        return clientData.getFirebaseUserData();
       },
     }
   );

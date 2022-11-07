@@ -36,12 +36,10 @@ export const useQbSession = () => {
       .catch(() => {
         dispatch(setAppSessionInvalid());
       });
-
   }
   async function tryCreateUserSession() {
     // check if application session has been created
     const session = await PromisedQb.getSession();
-    //debugger
     console.log("!!@@session", session);
     // early return if user session exists
     if (session?.application_id && session?.user_id !== 0 && session?.user_id) {
@@ -56,21 +54,22 @@ export const useQbSession = () => {
       const loginParams = { login: email, password: uid };
 
       let userExists = null;
-      debugger
-      await PromisedQb.loginUser(loginParams)
-        .then(() => {
+
+      const loggedUser = await PromisedQb.loginUser(loginParams)
+        .then((res) => {
           userExists = true;
           dispatch(setUserSessionValid());
+          return res;
         })
         .catch((err) => {
-          debugger
+          debugger;
           const { code } = err || {};
 
           if (code === 401) {
-            debugger
+          //  debugger;
             userExists = false;
           } else {
-            debugger
+            debugger;
             dispatch(setUserSessionInValid());
           }
         });
@@ -89,7 +88,6 @@ export const useQbSession = () => {
           dispatch(setUserSessionValid());
         }
       }
-  
     }
   }
   useEffect(() => {
@@ -105,14 +103,14 @@ export const useQbSession = () => {
   }, [qbInitialized, appSessionValid]);
 
   useEffect(() => {
-    if (appSessionValid && userSessionValid===null) {
-    //  debugger
+    if (appSessionValid && userSessionValid === null) {
+      //  debugger
       tryCreateUserSession();
     }
   }, [appSessionValid, userSessionValid]);
-  useEffect(()=>{
-    if (userSessionValid===false){
-      alert('something went wrong while connecting to calling services')
+  useEffect(() => {
+    if (userSessionValid === false) {
+      alert("something went wrong while connecting to calling services");
     }
-  },[userSessionValid])
+  }, [userSessionValid]);
 };

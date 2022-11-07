@@ -3,6 +3,7 @@ import { clientData } from "..";
 import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
 const key = ["contacts", "pending"];
+
 export const useQueryPendingContacts = () => {
   const chatConnected = useAppSelector(
     (state) => state.Quickblox.chatConnected
@@ -15,10 +16,11 @@ export const useQueryPendingContacts = () => {
     key,
     async () => {
       try {
+        const sesh = await PromisedQb.getSession();
         const contacts = (await PromisedQb.getRoster()) as {
           [key: number]: { subscription: string; ask: string };
         };
-
+        debugger;
         const friendContacts = Object.keys(contacts).filter((key: any) => {
           if (contacts[key].subscription === "from") {
             return true;
