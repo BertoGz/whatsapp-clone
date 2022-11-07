@@ -1,5 +1,5 @@
 import { Stack } from "@mui/system";
-import React from "react";
+import React, { useMemo } from "react";
 import { useMutationAcceptRequest } from "../../ReactQuery/Mutations/useMutationAcceptRequest";
 //import { users } from "../../Data";
 import { setSelectedProfile } from "../../Redux/AppState";
@@ -11,16 +11,20 @@ const ContactList = ({
 }: {
   data: Array<TypeDataEntityQbUser | null>;
 }) => {
-  const { mutateAsync } = useMutationAcceptRequest();
+  const { mutateAsync:acceptRequestMutation } = useMutationAcceptRequest();
   const dispatch = useAppDispatch();
   function onClick(user_id: number) {
     dispatch(setSelectedProfile(user_id));
-    mutateAsync(user_id);
+    acceptRequestMutation(user_id);
   }
+
+  const subscribedUsers = useMemo(() => {
+   return data // return data.filter((user) => user?.friend.subscription !== "none");
+  }, [data]);
 
   return (
     <Stack direction={"column"} flex={1}>
-      {data.map((item) => {
+      {subscribedUsers.map((item) => {
         if (!item) {
           return <></>;
         }
