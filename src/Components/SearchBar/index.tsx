@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { ButtonBase, OutlinedInput, Popover } from "@mui/material";
+import { Box, ButtonBase, OutlinedInput, Popover } from "@mui/material";
 import { Stack } from "@mui/system";
-import { AddBox, Notifications, Search } from "@mui/icons-material";
+import { AddBox, Notifications, PersonAdd, Search } from "@mui/icons-material";
 import { RequestsModal } from "../../Containers/RequestsModal";
 import { AddContactModal } from "../../Containers/AddContactModal";
 
-let modalOpen = ''
+let modalOpen = "";
 const SearchBar = () => {
   const [input, setInput] = useState("");
   //const [showRequestsModal, setShowRequestsModal] = useState(false);
@@ -16,10 +16,10 @@ const SearchBar = () => {
   ) {
     if (anchorEl) {
       setAnchorEl(null);
-      modalOpen ='' ;
+      modalOpen = "";
       return;
     }
-    modalOpen = 'requests'
+    modalOpen = "requests";
     setAnchorEl(event.currentTarget);
   }
   function handleToggleAddContactModal(
@@ -27,17 +27,18 @@ const SearchBar = () => {
   ) {
     if (anchorEl) {
       setAnchorEl(null);
-      modalOpen = '';
+      modalOpen = "";
       return;
     }
-    modalOpen = 'addContact'
+    modalOpen = "addContact";
     setAnchorEl(event.currentTarget);
   }
   return (
-    <Stack direction="row" alignItems="center">
+    <Stack direction="row" alignItems="center" spacing={2} sx={{ padding: 2 }}>
       <OutlinedInput
-        id="outlined-basic"
-        label="Outlined"
+        fullWidth
+        sx={{}}
+        style={{ height: 40, borderRadius: 10, backgroundColor: "Background" }}
         value={input}
         onChange={(e) => {
           const updateVal = e.target.value;
@@ -45,13 +46,15 @@ const SearchBar = () => {
         }}
         startAdornment={<Search />}
       />
-      <ButtonBase onClick={handleToggleAddContactModal}>
-        <AddBox color="action" />
-      </ButtonBase>
-      <ButtonBase onClick={handleToggleRequestsModal}>
-        <Notifications color="warning" />
-      </ButtonBase>
 
+      <Stack direction="row" spacing={1}>
+        <ButtonBase onClick={handleToggleAddContactModal}>
+          <PersonAdd fontSize="medium" sx={{ color: "Background" }} />
+        </ButtonBase>
+        <ButtonBase onClick={handleToggleRequestsModal}>
+          <Notifications fontSize="medium" sx={{ color: "Background" }} />
+        </ButtonBase>
+      </Stack>
       <Popover
         open={Boolean(anchorEl)}
         anchorEl={anchorEl}
@@ -63,8 +66,8 @@ const SearchBar = () => {
           horizontal: "right",
         }}
       >
-        {modalOpen === 'requests' && <RequestsModal />}
-        {modalOpen === 'addContact' && <AddContactModal />}
+        {modalOpen === "requests" && <RequestsModal />}
+        {modalOpen === "addContact" && <AddContactModal />}
       </Popover>
     </Stack>
   );
