@@ -1,37 +1,30 @@
-import axios from "axios";
 import { useMutation } from "react-query";
+import { queryClient } from "..";
 import { PromisedQb } from "../../Quickblox";
+import {
+  createRelationshipRequest,
+  getQuickbloxUserByEmailRequest,
+} from "../../Requests";
 
 type errorTypes = {};
 
 async function sendFriendRequestFn(email: string) {
-  const session = await PromisedQb.getSession();
-  const { token } = session || {};
-  const getUserByEmailEndpoint = {
-    method: "GET",
-    url: "https://api.quickblox.com/users/by_email.json",
-    params: { email },
-    headers: { accept: "application/json", "QB-Token": token },
-  };
-
-  const response = (await axios
-    .request(getUserByEmailEndpoint)
-    .then((res) => {
-      return res;
-      // return Promise.resolve(res);
-    })
+  const responseOpponent = (await getQuickbloxUserByEmailRequest({ email })
+    .then((res) => res)
     .catch(function (error) {
       debugger;
       console.log(error);
       // return Promise.reject(error);
     })) as any;
-  debugger;
-  if (response?.data) {
-    const { id } = response?.data?.user || {};
 
-    return await PromisedQb.addToRoster(id)
+  if (responseOpponent?.data) {
+    const { id } = responseOpponent?.data?.user || {};
+    const { user_id: initiator_id } =
+      (await PromisedQb.getSessionUser()) as any;
+
+    return await createRelationshipRequest({ initiator_id, opponent_id: id })
       .then((res) => {
-        debugger;
+        queryClient.invalidateQueries("contacts");
         return Promise.resolve(res);
       })
       .catch((e) => {
