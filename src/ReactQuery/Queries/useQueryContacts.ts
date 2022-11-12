@@ -19,7 +19,7 @@ export const useQueryContacts = (
   const query = useQuery<
     any,
     any,
-    { items: Array<TypeDataEntityQbUser | null> }
+    { items: Array<TypeDataEntityContact | null> }
   >(
     key,
     async () => {
@@ -31,19 +31,29 @@ export const useQueryContacts = (
 
         const friendRelationships = relationships.filter(
           (relationship: any) => {
-            if (relationship.status === 1) {
-              return true;
+            switch (props.status) {
+              case "pending":
+                if (relationship.status === 0) {
+                  return true;
+                }
+                break;
+              case "connected":
+                if (relationship.status === 1) {
+                  return true;
+                }
+                break;
             }
+
             return false;
           }
         );
-
+        debugger;
         // early return case
         if (friendRelationships?.length === 0) {
           return [];
         }
         const friendRelationshipsIds = friendRelationships.map(
-          (relationship) => relationship.opponent_id
+          (relationship) => relationship.user_id
         );
 
         // debugger;
@@ -60,9 +70,12 @@ export const useQueryContacts = (
         const contactData = await PromisedQb.listUsers(params);
         const { items }: { items: Array<any> } = contactData || {};
         let formattedContactData = items.map((item) => {
-          const relationshipProps = relationships[item.id];
+          const relationshipProps = relationships.find(
+            (relationship) => relationship.user_id === item.user.id
+          );
+          debugger;
           if (relationshipProps) {
-            return { ...item.user, friend: relationshipProps };
+            return { ...item.user, relationship: relationshipProps };
           }
           return item.user;
         });
