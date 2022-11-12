@@ -15,7 +15,7 @@ const FriendRequestButtons = ({
     <Stack spacing={1} direction={"row"}>
       <Button
         sx={{
-          paddingY: .5,
+          paddingY: 0.5,
           backgroundColor: "lightgray",
           ":hover": {
             backgroundColor: "lightgray",
@@ -32,7 +32,7 @@ const FriendRequestButtons = ({
       </Button>
       <Button
         sx={{
-          paddingY: .5,
+          paddingY: 0.5,
           backgroundColor: "steelblue",
           color: "white",
           textTransform: "none",
@@ -52,37 +52,51 @@ const FriendRequestButtons = ({
 };
 const ContactListItem = ({
   item,
-  onClick,
+  onClick = () => {},
+  variant = "",
+  onAccept = () => {},
+  onReject = () => {},
 }: {
-  item: TypeDataEntityQbUser;
-  onClick: () => void;
+  item: TypeDataEntityQbUser | null;
+  onClick?: (a?: any) => void;
+  variant?: "request" | "";
+  onAccept?: (a?: any) => void;
+  onReject?: (a?: any) => void;
 }) => {
-  const { full_name, email, friend } = item || {};
+  const { full_name, email } = item || {};
   if (!full_name) {
     return <></>;
   }
   const fullname = full_name;
-  function onAccept() {}
-  function onReject() {}
   return (
-    <ButtonBase sx={{ justifyContent: "flex-start" }} onClick={onClick}>
+    <ButtonBase
+      sx={{
+        justifyContent: "flex-start",
+        ":hover": { backgroundColor: "Highlight", borderRadius: 2 },
+      }}
+      onClick={onClick}
+    >
       <Stack
         direction="row"
         alignItems="center"
         justifyContent={"space-between"}
-        spacing={1}
       >
         <Avatar alt={fullname} src={profilepic} sx={{ margin: 1 }} />
         <Stack flex={1}>
           <Typography lineHeight={1} textAlign={"left"} fontWeight={"bold"}>
             {fullname}
           </Typography>
-          <Typography lineHeight={1} textAlign={"left"} color="GrayText">
+          <Typography lineHeight={1} textAlign={"left"}>
             {email}
           </Typography>
         </Stack>
-        {friend.subscription === "from" && (
-          <FriendRequestButtons {...{ onAccept, onReject }} />
+        {variant === "request" && (
+          <FriendRequestButtons
+            {...{
+              onAccept: () => onAccept(item),
+              onReject: () => onAccept(item),
+            }}
+          />
         )}
       </Stack>
     </ButtonBase>
