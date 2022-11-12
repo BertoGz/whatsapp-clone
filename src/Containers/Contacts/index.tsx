@@ -7,10 +7,10 @@ import { useQueryContacts } from "../../ReactQuery/Queries/useQueryContacts";
 const Contacts = () => {
   const { data } = useQueryContacts();
   const { items } = data || {};
- 
+
   console.log("contacts data", data);
   return (
-    <Stack>
+    <Stack bgcolor={"lightslategrey"} sx={{ minHeight: "100vh" }}>
       <SearchBar />
       <ContactList data={items ?? []} />
     </Stack>

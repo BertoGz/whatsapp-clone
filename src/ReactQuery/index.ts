@@ -20,7 +20,7 @@ export const clientData = {
   getFirebaseUserData: () =>
     queryClient.getQueryData("firebaseUserData") as User,
   getQuickbloxUserData: () => queryClient.getQueryData("qbUserData") as any,
-  getContacts: () => queryClient.getQueryData("contacts") as Array<any>,
+  getContacts: () => queryClient.getQueryData("contacts") as Array<TypeDataEntityContact>,
   getPendingContacts: () =>
     queryClient.getQueryData("pendingContacts") as Array<any>,
 };
