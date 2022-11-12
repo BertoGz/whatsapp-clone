@@ -1,4 +1,5 @@
 import { useQuery } from "react-query";
+import { clientData, queryClient } from "..";
 import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
 
@@ -35,6 +36,13 @@ export const useQueryContact = (id: number) => {
     {
       enabled: chatConnected && !!id,
       keepPreviousData: true,
+      initialData: () => {
+        const users = clientData.getContacts();
+        if (!users?.length) {
+          return null;
+        }
+        return users.find((user) => user.id === id);
+      },
     }
   );
   return query;
