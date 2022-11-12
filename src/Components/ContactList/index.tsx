@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useMemo } from "react";
-import { useMutationAcceptRequest } from "../../ReactQuery/Mutations/useMutationAcceptRequest";
+import { useMemo } from "react";
+
 //import { users } from "../../Data";
 import { setSelectedProfile } from "../../Redux/AppState";
 import { useAppDispatch } from "../../Redux/useAppDispatch";
@@ -10,13 +10,11 @@ import ContactListItem from "../ContactListItem";
 const ContactList = ({
   data = [],
 }: {
-  data: Array<TypeDataEntityQbUser | null>;
+  data: Array<TypeDataEntityContact | null>;
 }) => {
-  const { mutateAsync: acceptRequestMutation } = useMutationAcceptRequest();
   const dispatch = useAppDispatch();
-  function onClick(user_id: number) {
-    dispatch(setSelectedProfile(user_id));
-    acceptRequestMutation(user_id);
+  function onClick(user: TypeDataEntityContact) {
+    dispatch(setSelectedProfile(user.id));
   }
 
   const subscribedUsers = useMemo(() => {
@@ -26,8 +24,13 @@ const ContactList = ({
   if (subscribedUsers?.length === 0) {
     return (
       <>
-        <Box flexGrow={1} display="flex" justifyContent={'center'} alignItems="center">
-          <Typography variant="h5" color="white" textAlign={'center'}>
+        <Box
+          flexGrow={1}
+          display="flex"
+          justifyContent={"center"}
+          alignItems="center"
+        >
+          <Typography variant="h5" color="white" textAlign={"center"}>
             Connected users will appear here.
           </Typography>
         </Box>
@@ -35,7 +38,7 @@ const ContactList = ({
     );
   }
   return (
-    <Stack direction={"column"} flex={1}>
+    <Stack direction={"column"} flex={1} p={1}>
       {subscribedUsers.map((item) => {
         if (!item) {
           return <></>;
@@ -44,7 +47,7 @@ const ContactList = ({
           <ContactListItem
             {...{ item }}
             onClick={() => {
-              onClick(item.id);
+              onClick(item);
             }}
           />
         );
