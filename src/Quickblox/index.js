@@ -1,13 +1,21 @@
 import * as QB from "quickblox/quickblox";
 import { setChatConnected } from "../Redux/Quickblox";
 import { store } from "../Redux/store";
+let userSession = null;
 export const PromisedQb = {
+  getSessionUser: async () => {
+    let session = userSession;
+    //const { user_id } = session || {};
+
+    return session;
+  },
   getSession: async () => {
     return new Promise((res, rej) => {
       return QB.getSession((error, sesh) => {
         if (error) {
           rej(error);
         }
+        userSession = sesh.session;
         res(sesh.session);
       });
     });
@@ -18,6 +26,7 @@ export const PromisedQb = {
         if (error) {
           rej(error);
         }
+        userSession = sesh.session;
         res(sesh.session);
       });
     });
@@ -70,7 +79,7 @@ export const PromisedQb = {
     return new Promise(async (res, rej) => {
       try {
         await QB.chat.roster.get((contactList) => {
-          console.log("contactList");
+          console.log("contactList", contactList);
           res(contactList);
         });
       } catch (e) {
