@@ -1,51 +1,83 @@
-const BASE_URL = "http://localhost:3000";
-const SIGN_IN_ENDPOINT = "/signin";
-const CREATE_USER_ENDPOINT = "/createUser";
-const GET_CUSTOM_TOKEN_ENDPOINT = "/getCustomToken";
-const sendRequest = async ({ endpoint, method, body }) => {
-  const url = `${BASE_URL}${endpoint}`;
-  //console.log("url", url, endpoint);
-  const res = fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      return data;
-    });
-  return res;
-};
-const postRequest = async ({ endpoint, method, body }) => {
-  try {
-    const response = await sendRequest({ endpoint, method, body });
-    const res = response || {};
-    const { status } = res || {};
-    if (status > 0) {
+import axios from "axios";
+import {
+  BASE_URL,
+  GET_MY_RELATIONSHIPS_ENDPOINT,
+  SET_RELATIONSHIP_ENDPOINT,
+} from "./Contants";
+import { PromisedQb } from "./Quickblox";
+
+
+async function axiosRequest({
+  endpoint = "",
+  method = "GET",
+  params = undefined,
+  data = undefined,
+  useBaseUrl = false,
+}) {
+  const session = await PromisedQb.getSession();
+  const { token } = session || {};
+  return axios
+    .request({
+      method,
+      params,
+      data,
+      baseURL: useBaseUrl ? BASE_URL : undefined,
+      url: endpoint,
+      headers: {
+        "QB-Token": token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => {
+      if (res?.data) {
+        return res.data;
+      }
       return res;
-    }
-    return res;
-  } catch (error) {
-    return { error };
-  }
-};
+    })
+    .catch((e) => console.error(e));
+}
 
-export const requestUserSignin = async ({ email, password }) =>
-  postRequest({
-    endpoint: SIGN_IN_ENDPOINT,
-    method: "post",
-    body: { email, password },
+export async function createRelationshipRequest({
+  initiator_id = 0,
+  opponent_id = 0,
+}) {
+  return axiosRequest({
+    endpoint: SET_RELATIONSHIP_ENDPOINT,
+    method: "POST",
+    useBaseUrl: true,
+    data: {
+      initiator_id,
+      opponent_id,
+    },
   });
+}
+export async function updateRelationship({ relationship_id = 0, status = -1 }) {
+  return axiosRequest({
+    method: "POST",
+    endpoint: SET_RELATIONSHIP_ENDPOINT,
+    useBaseUrl: true,
+    data: {
+      relationship_id,
+      status,
+    },
+  });
+}
+export async function getMyRelationshipsRequest({ user_id = 0 }) {
+  return axiosRequest({
+    endpoint: GET_MY_RELATIONSHIPS_ENDPOINT,
+    method: "POST",
+    useBaseUrl: true,
+    data: {
+      user_id,
+    },
+  });
+}
 
-export const createUserEndpoint = async ({ email, password }) =>
-  postRequest({
-    endpoint: CREATE_USER_ENDPOINT,
-    method: "post",
-    body: { email, password },
+export async function getQuickbloxUserByEmailRequest({ email = "" }) {
+  return axiosRequest({
+    endpoint: "https://api.quickblox.com/users/by_email.json",
+    params: { email },
+    method: "GET",
   });
-export const getCustomToken = async (uid) =>
-  postRequest({
-    endpoint: GET_CUSTOM_TOKEN_ENDPOINT,
-    method: "post",
-    body: { uid },
-  });
+}
