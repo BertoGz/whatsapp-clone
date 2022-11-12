@@ -1,9 +1,8 @@
 import {
   Box,
   Button,
-  ButtonBase,
-  Divider,
   FormLabel,
+  Grid,
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -76,14 +75,18 @@ const Auth = () => {
   }
   return (
     <Stack direction="column">
-      <Stack direction="row" divider={<Divider />}>
-        <Contacts />
-        <Profile />
-      </Stack>
+      <Grid direction="row" container>
+        <Grid item xs={4} minWidth={250}>
+          <Contacts />
+        </Grid>
+        <Grid item xs={8}>
+          <Profile />
+        </Grid>
+      </Grid>
       <Button
         onClick={() => {
           if (email) {
-          //  debugger
+            //  debugger
             signOutMutation(null, {
               onSuccess: () => {
                 navigate("/");
