@@ -75,8 +75,8 @@ const Auth = () => {
   }
   return (
     <Stack direction="column">
-      <Grid direction="row" container>
-        <Grid item xs={4} minWidth={250}>
+      <Grid direction="row" container >
+        <Grid item xs={3} minWidth={250}>
           <Contacts />
         </Grid>
         <Grid item xs={8}>
