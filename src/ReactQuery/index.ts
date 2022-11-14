@@ -8,14 +8,14 @@ export const queryClient = new QueryClient({
     },
   },
 });
-
+export * from "./Mutations/useMutationUpdateRelationship";
 export * from "./Mutations/useMutationLoginUser";
 export * from "./Mutations/useMutationCreateUser";
 export * from "./Queries/useQueryFirebaseUserData";
 export * from "./Queries/useQueryQuickbloxUserData";
 export * from "./Queries/useQueryContacts";
 export * from "./Queries/useQueryContact";
-
+export * from "./Queries/useQueryDialogs"
 export const clientData = {
   getFirebaseUserData: () =>
     queryClient.getQueryData("firebaseUserData") as User,
