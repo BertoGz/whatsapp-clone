@@ -11,10 +11,13 @@ import { Stack } from "@mui/system";
 import { useState } from "react";
 import { PressableText } from "../../Components/ClickableText";
 import { PromisedQb } from "../../Quickblox";
+import { clientData, useMutationUpdateRelationship } from "../../ReactQuery";
 
 const DebugMenu = () => {
+  const { mutateAsync: updateRelationshipMutation } =
+    useMutationUpdateRelationship();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [removeRosterInput, setRemoveRosterInput] = useState("");
+  const [removeFriendInput, setRemoveFriendInput] = useState("");
   function onTryDisconnectChat() {
     PromisedQb.chatDisconnect();
   }
@@ -26,9 +29,17 @@ const DebugMenu = () => {
     setAnchorEl(event.currentTarget);
   }
   function tryRemoveFriend() {
-    PromisedQb.removeFromRoster(parseInt(removeRosterInput, 10));
-  }
+    const contacts = clientData.getContacts();
+    const user = contacts.filter(
+      (contact) => contact.id === parseInt(removeFriendInput, 10)
+    );
 
+    updateRelationshipMutation({
+      relationship_id: user[0].relationship.relationship_id,
+      status: 3,
+    });
+  }
+  //return <></>;
   return (
     <div
       style={{
@@ -78,9 +89,9 @@ const DebugMenu = () => {
             </PressableText>
             <Stack direction="row">
               <TextField
-                value={removeRosterInput}
+                value={removeFriendInput}
                 onChange={(e) => {
-                  setRemoveRosterInput(e.target.value);
+                  setRemoveFriendInput(e.target.value);
                 }}
               />
               <PressableText onClick={tryRemoveFriend}>
