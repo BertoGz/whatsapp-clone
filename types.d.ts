@@ -1,12 +1,35 @@
 declare module "*.webp" {
   export default "" as string;
 }
+declare module "quickblox/quickblox" {
+  export default '*' as any;
+}
+declare module "@mui/material/styles" {
+  interface Theme {
+    status: {
+      danger: string;
+    };
+  }
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    status?: {
+      danger?: string;
+    };
+  }
+}
 
 declare module "*.png" {
   export default "" as string;
 }
-type TypeDataEntityContact = any;
-
+type TypeDataEntityQbUserSession = { user_id: number };
+type TypeDataEntityDialog = {};
+type TypeDataEntityRelationship = {
+  user_id: number;
+  relationship_id: number;
+  initiator_id: number;
+  who_block: number;
+  status: 0 | 1 | 2 | 3 | 4;
+};
 type TypeDataEntityQbUser = {
   id: number;
   full_name: string;
@@ -24,5 +47,8 @@ type TypeDataEntityQbUser = {
   age_over16: boolean;
   parents_contacts: string;
   user_tags: any;
-  friend:{subscription:string,ask:string}
+  relationship: TypeDataEntityRelationship;
+};
+type TypeDataEntityContact = TypeDataEntityQbUser & {
+  relationship: TypeDataEntityRelationship;
 };
