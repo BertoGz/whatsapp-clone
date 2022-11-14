@@ -49,6 +49,7 @@ export async function createRelationshipRequest({
     data: {
       initiator_id,
       opponent_id,
+      status: 0,
     },
   });
 }
