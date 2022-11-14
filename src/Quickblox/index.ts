@@ -1,13 +1,11 @@
+// @ts-nocheck
 import * as QB from "quickblox/quickblox";
 import { setChatConnected } from "../Redux/Quickblox";
 import { store } from "../Redux/store";
-let userSession = null;
+let userSession = null as TypeDataEntityQbUserSession | null;
 export const PromisedQb = {
-  getSessionUser: async () => {
-    let session = userSession;
-    //const { user_id } = session || {};
-
-    return session;
+  getSessionUser: () => {
+    return userSession;
   },
   getSession: async () => {
     return new Promise((res, rej) => {
@@ -90,7 +88,7 @@ export const PromisedQb = {
       }
     });
   },
-  addToRoster: async (userId) => {
+  addToRoster: async (userId: number) => {
     return new Promise(async (res, rej) => {
       try {
         await QB.chat.roster.add(userId, (data) => {
@@ -105,46 +103,66 @@ export const PromisedQb = {
       }
     });
   },
-  confirmAddRoster: async (userId) => {
+  confirmAddRoster: async (userId: number) => {
     return new Promise(async (res, rej) => {
       try {
         await QB.chat.roster.confirm(userId, (error) => {
           if (!error) {
             return res(1);
           }
-          debugger;
+          // debugger;
         });
       } catch (e) {
         rej(e);
       }
     });
   },
-  removeFromRoster: async (userId) => {
+  removeFromRoster: async (userId: number) => {
     return new Promise(async (res, rej) => {
       try {
         QB.chat.roster.remove(userId, (error) => {
           if (!error) {
             return res(1);
           }
-          debugger;
+          //  debugger;
         });
       } catch (e) {
         rej(e);
       }
     });
   },
-  listUsers: async (params) => {
-    return new Promise((res, rej) => {
-      return QB.users.listUsers(params, (error, response) => {
+  listUsers: async (params: any) => {
+    return new Promise<{ items: Array<any> }>((res, rej) => {
+      return QB.users.listUsers(params, (error: any, response: any) => {
         if (error) {
           console.log(error);
-          debugger;
+          //  debugger;
           rej(error);
         } else {
           console.log(response);
           //   debugger;
           res(response);
         }
+      });
+    });
+  },
+  dialogCreate: async (params: any) => {
+    return new Promise((res, rej) => {
+      return QB.chat.dialog.create(params, (error, dialog) => {
+        if (error) {
+          rej(error);
+        }
+        res(dialog);
+      });
+    });
+  },
+  dialogList: async (params: any) => {
+    return new Promise((res, rej) => {
+      return QB.chat.dialog.list(params, (error, dialogs) => {
+        if (error) {
+          rej(error);
+        }
+        res(dialogs);
       });
     });
   },
@@ -201,15 +219,15 @@ export const connectChat = async (userCredentials = {}) => {
   onMessageListener: () => QB.chat.onMessageListener,
 };*/
 
-function onReconnectListener(msg) {
+function onReconnectListener(msg: any) {
   console.log("##onReconnect");
 }
-function onDisconnectedListener(msg) {
+function onDisconnectedListener(msg: any) {
   const dispatch = store.dispatch;
   console.log("##onDisconnect");
   dispatch(setChatConnected(false));
 }
-function onSubscribeListener(msg) {
+function onSubscribeListener(msg: any) {
   console.log("##onSubscribe");
 }
 function onConfirmSubscribeListener() {
