@@ -38,7 +38,7 @@ const ContactList = ({
     );
   }
   return (
-    <Stack direction={"column"} flex={1} p={1}>
+    <Stack direction={"column"} flex={1}>
       {subscribedUsers.map((item) => {
         if (!item) {
           return <></>;

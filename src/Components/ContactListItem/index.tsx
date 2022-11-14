@@ -1,6 +1,15 @@
 import React from "react";
-import { Avatar, Button, ButtonBase, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ButtonBase,
+  Divider,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Stack } from "@mui/system";
+import { ArrowForwardIos } from "@mui/icons-material";
+import { useAppSelector } from "../../Redux/useAppSelector";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
 
@@ -63,32 +72,69 @@ const ContactListItem = ({
   onAccept?: (a?: any) => void;
   onReject?: (a?: any) => void;
 }) => {
-  const { full_name, email } = item || {};
+  const theme = useTheme();
+  const { full_name, email, id } = item || {};
+  const selectedProfile = useAppSelector(
+    (state) => state.AppState.selectedProfile
+  );
+  const isSelected = selectedProfile === id;
   if (!full_name) {
     return <></>;
   }
   const fullname = full_name;
+
   return (
     <ButtonBase
       sx={{
-        justifyContent: "flex-start",
-        ":hover": { backgroundColor: "Highlight", borderRadius: 2 },
+        alignItems: "flex-start",
+        flexDirection: "column",
+        backgroundColor: isSelected ? theme.palette.secondary.dark : null,
       }}
       onClick={onClick}
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent={"space-between"}
-      >
-        <Avatar alt={fullname} src={profilepic} sx={{ margin: 1 }} />
-        <Stack flex={1}>
-          <Typography lineHeight={1} textAlign={"left"} fontWeight={"bold"}>
-            {fullname}
-          </Typography>
-          <Typography lineHeight={1} textAlign={"left"}>
-            {email}
-          </Typography>
+      <Stack direction="row" alignItems="center" width="100%" height="60px">
+        <Avatar
+          alt={fullname}
+          src={profilepic}
+          sx={{
+            outlineStyle: "solid",
+            outlineWidth: "2px",
+            outlineColor: theme.palette.secondary.main,
+            margin: 1,
+          }}
+        />
+        <Stack
+          sx={{ paddingRight: 1, height: "100%" }}
+          flex={1}
+          justifyContent="space-between"
+        >
+          <Stack sx={{ py: 1 }}>
+            <Stack direction="row" justifyContent={"space-between"}>
+              <Typography
+                lineHeight={1}
+                textAlign={"left"}
+                fontWeight={"bold"}
+                color="secondary"
+              >
+                {fullname}
+              </Typography>
+              <Stack gap={1} direction="row" alignItems={"center"}>
+                <Typography color="secondary" lineHeight={1}>
+                  9:33 AM
+                </Typography>
+                <ArrowForwardIos color="secondary" sx={{ fontSize: "10px" }} />
+              </Stack>
+            </Stack>
+            <Typography
+              lineHeight={1.5}
+              textAlign={"left"}
+              variant="body2"
+              color="secondary"
+            >
+              Start messaging {fullname}
+            </Typography>
+          </Stack>
+          <Divider />
         </Stack>
         {variant === "request" && (
           <FriendRequestButtons
