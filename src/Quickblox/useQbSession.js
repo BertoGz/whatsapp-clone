@@ -62,14 +62,14 @@ export const useQbSession = () => {
           return res;
         })
         .catch((err) => {
-          debugger;
+          //debugger;
           const { code } = err || {};
 
           if (code === 401) {
           //  debugger;
             userExists = false;
           } else {
-            debugger;
+           // debugger;
             dispatch(setUserSessionInValid());
           }
         });
