@@ -57,7 +57,14 @@ const Quickblox = createSlice({
       state.qbSession = action.payload
     },
     resetState: (state) => {
-      state = initialState;
+      state.qbInitialized = initialState.qbInitialized
+      state.chatConnected = initialState.chatConnected;
+      state.userSessionValid = initialState.userSessionValid;
+      state.appSessionValid = initialState.appSessionValid
+      state.qbServiceFailure = initialState.qbServiceFailure;
+      state.chatListenersInit = initialState.chatListenersInit
+      state.webRtcConnected = initialState.webRtcConnected;
+    //  debugger
     },
   },
 });
