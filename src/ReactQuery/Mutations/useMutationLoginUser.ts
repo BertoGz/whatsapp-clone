@@ -19,7 +19,7 @@ type errorTypes =
 async function loginUserFn(loginParams: TypeParamsUserLogin) {
   let response;
   const user = await FirebaseActions.getCurrentUser(); //window.localStorage.getItem("accessToken");
-  debugger
+ // debugger
   if (loginParams.isEmailLinkSignin) {
     response = await FirebaseActions.signInWithEmailLink();
   } else if (user) {
@@ -38,7 +38,7 @@ async function loginUserFn(loginParams: TypeParamsUserLogin) {
   }
   if (response.status === 1) {
     queryClient.setQueryData("firebaseUserData", response.data);
-    debugger
+    //debugger
     return Promise.resolve(response.data);
   } else {
     const { code } = response.data;

@@ -2,7 +2,7 @@ declare module "*.webp" {
   export default "" as string;
 }
 declare module "quickblox/quickblox" {
-  export default '*' as any;
+  export default "*" as any;
 }
 declare module "@mui/material/styles" {
   interface Theme {
@@ -26,6 +26,7 @@ type TypeDataEntityDialog = {};
 type TypeDataEntityRelationship = {
   user_id: number;
   relationship_id: number;
+  isInitiator: boolean;
   initiator_id: number;
   who_block: number;
   status: 0 | 1 | 2 | 3 | 4;
