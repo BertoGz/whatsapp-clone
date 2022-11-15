@@ -1,8 +1,9 @@
 import * as QB from "quickblox/quickblox";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { PromisedQb } from ".";
 import { useQueryFirebaseUserData } from "../ReactQuery";
 import {
+  resetState,
   setAppSessionInvalid,
   setAppSessionValid,
   setQbInitSuccess,
@@ -17,8 +18,22 @@ var AUTH_SECRET = "gFYev7gKMzmAAcG";
 var ACCOUNT_KEY = "ub3Nry9YQWQHnWQqLKez";
 var CONFIG = { debug: false };
 
+// Hook
+function usePrevious(value) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
+}
+
 export const useQbSession = () => {
   const { data: userData } = useQueryFirebaseUserData();
+  const prevUserData = usePrevious(userData);
   const { email, uid } = userData || {};
   const { qbInitialized, appSessionValid, userSessionValid } = useAppSelector(
     (state) => state.Quickblox
@@ -66,10 +81,10 @@ export const useQbSession = () => {
           const { code } = err || {};
 
           if (code === 401) {
-          //  debugger;
+            //  debugger;
             userExists = false;
           } else {
-           // debugger;
+            // debugger;
             dispatch(setUserSessionInValid());
           }
         });
@@ -90,6 +105,12 @@ export const useQbSession = () => {
       }
     }
   }
+  useEffect(() => {
+    if (prevUserData !== userData && !userData) {
+      // clear quickblox
+      dispatch(resetState());
+    }
+  }, [userData]);
   useEffect(() => {
     if (qbInitialized === null && userData) {
       tryQbInit();
