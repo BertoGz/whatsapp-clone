@@ -16,37 +16,32 @@ export const useQueryContacts = (
   const chatConnected = useAppSelector(
     (state) => state.Quickblox.chatConnected
   );
-  const query = useQuery<
-    any,
-    any,
-    { items: Array<TypeDataEntityContact | null> }
-  >(
+  const query = useQuery<any, any, Array<TypeDataEntityContact | null>>(
     key,
     async () => {
       try {
         const { user_id } = (await PromisedQb.getSessionUser()) as any;
         const relationResponse = await getMyRelationshipsRequest({ user_id });
-        const { data: relationships }: { data: Array<any> } =
-          relationResponse || {};
+        const {
+          data: relationships,
+        }: { data: Array<TypeDataEntityRelationship> } = relationResponse || {};
 
-        const friendRelationships = relationships.filter(
-          (relationship: any) => {
-            switch (props.status) {
-              case "pending":
-                if (relationship.status === 0) {
-                  return true;
-                }
-                break;
-              case "connected":
-                if (relationship.status === 1) {
-                  return true;
-                }
-                break;
-            }
-
-            return false;
+        const friendRelationships = relationships.filter((relationship) => {
+          switch (props.status) {
+            case "pending":
+              if (relationship.status === 0) {
+                return true;
+              }
+              break;
+            case "connected":
+              if (relationship.status === 1) {
+                return true;
+              }
+              break;
           }
-        );
+
+          return false;
+        });
         debugger;
         // early return case
         if (friendRelationships?.length === 0) {
@@ -68,25 +63,47 @@ export const useQueryContacts = (
         };
         // fetch contact data based on relationships query
         const contactData = await PromisedQb.listUsers(params);
-        const { items }: { items: Array<any> } = contactData || {};
+        const { items } = contactData || {};
         let formattedContactData = items.map((item) => {
           const relationshipProps = relationships.find(
             (relationship) => relationship.user_id === item.user.id
           );
-          debugger;
+
           if (relationshipProps) {
             return { ...item.user, relationship: relationshipProps };
           }
           return item.user;
         });
-        return { ...contactData, items: formattedContactData || [] };
+        debugger;
+        return formattedContactData || [];
       } catch (e) {}
     },
     {
       enabled: chatConnected,
       keepPreviousData: true,
       initialData: () => {
-        return clientData.getContacts();
+        const contacts = clientData.getContacts();
+        if (!contacts?.length) {
+          return [];
+        }
+        // debugger;
+        return contacts.filter((contact) => {
+          switch (props.status) {
+            case "pending":
+              if (contact.relationship.status === 0) {
+                debugger;
+                return true;
+              }
+              break;
+            case "connected":
+              if (contact.relationship.status === 1) {
+                return true;
+              }
+              break;
+          }
+          return false;
+        });
+        //  return data;
       },
     }
   );
