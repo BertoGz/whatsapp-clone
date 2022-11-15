@@ -16,12 +16,9 @@ async function sendFriendRequestFn(email: string) {
       console.log(error);
       // return Promise.reject(error);
     })) as any;
-
-  if (responseOpponent?.data) {
-    const { id } = responseOpponent?.data?.user || {};
-    const { user_id: initiator_id } =
-      (await PromisedQb.getSessionUser()) as any;
-
+  if (responseOpponent) {
+    const { id } = responseOpponent?.user || {};
+    const { user_id: initiator_id } = PromisedQb.getSessionUser() || {};
     return await createRelationshipRequest({ initiator_id, opponent_id: id })
       .then((res) => {
         queryClient.invalidateQueries("contacts");
