@@ -6,7 +6,6 @@ import {
 } from "./Contants";
 import { PromisedQb } from "./Quickblox";
 
-
 async function axiosRequest({
   endpoint = "",
   method = "GET",
@@ -64,14 +63,11 @@ export async function updateRelationship({ relationship_id = 0, status = -1 }) {
     },
   });
 }
-export async function getMyRelationshipsRequest({ user_id = 0 }) {
+export async function getMyRelationshipsRequest() {
   return axiosRequest({
     endpoint: GET_MY_RELATIONSHIPS_ENDPOINT,
     method: "POST",
     useBaseUrl: true,
-    data: {
-      user_id,
-    },
   });
 }
 
