@@ -39,6 +39,9 @@ const DebugMenu = () => {
       status: 3,
     });
   }
+  function handleLogQbSession() {
+    console.log("!!@@qbSession", PromisedQb.getSessionUser());
+  }
   //return <></>;
   return (
     <div
@@ -101,6 +104,9 @@ const DebugMenu = () => {
             <Divider variant="fullWidth" />
             <PressableText onClick={handleToggleModal}>
               Close Menu
+            </PressableText>
+            <PressableText onClick={handleLogQbSession}>
+              Log QB session
             </PressableText>
           </Stack>
         </Paper>
