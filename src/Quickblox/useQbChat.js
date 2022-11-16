@@ -88,9 +88,9 @@ export const useQbChat = () => {
     }
   }, [userSessionValid, chatListenersInit]);
   useEffect(() => {
-    if (userSessionValid && chatListenersInit) {
+    if (userSessionValid && !chatConnected) {
       tryConnectChat();
     }
-  }, [userSessionValid, chatListenersInit, chatConnected]);
+  }, [userSessionValid, chatConnected]);
   return <></>;
 };
