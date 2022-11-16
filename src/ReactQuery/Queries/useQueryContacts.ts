@@ -21,7 +21,7 @@ export const useQueryContacts = (
     async () => {
       try {
         const { user_id } = (await PromisedQb.getSessionUser()) as any;
-        const relationResponse = await getMyRelationshipsRequest({ user_id });
+        const relationResponse = await getMyRelationshipsRequest();
         const {
           data: relationships,
         }: { data: Array<TypeDataEntityRelationship> } = relationResponse || {};
