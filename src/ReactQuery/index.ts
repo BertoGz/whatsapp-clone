@@ -15,7 +15,6 @@ export * from "./Queries/useQueryFirebaseUserData";
 export * from "./Queries/useQueryQuickbloxUserData";
 export * from "./Queries/useQueryContacts";
 export * from "./Queries/useQueryContact";
-export * from "./Queries/useQueryDialogs";
 export const clientData = {
   getFirebaseUserData: () =>
     queryClient.getQueryData("firebaseUserData") as User | undefined,
