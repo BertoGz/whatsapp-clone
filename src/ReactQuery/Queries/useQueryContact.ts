@@ -37,11 +37,8 @@ export const useQueryContact = (id: number) => {
       enabled: chatConnected && !!id,
       keepPreviousData: true,
       initialData: () => {
-        const users = clientData.getContacts();
-        if (!users?.length) {
-          return null;
-        }
-        return users.find((user) => user.id === id);
+        const contacts = clientData.getContacts();
+        return contacts?.find((contact) => contact?.user?.id === id);
       },
     }
   );

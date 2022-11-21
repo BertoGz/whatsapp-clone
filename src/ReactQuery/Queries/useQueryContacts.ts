@@ -20,7 +20,6 @@ export const useQueryContacts = (
     key,
     async () => {
       try {
-        const { user_id } = (await PromisedQb.getSessionUser()) as any;
         const relationResponse = await getMyRelationshipsRequest();
         const {
           data: relationships,
@@ -51,8 +50,7 @@ export const useQueryContacts = (
           (relationship) => relationship.user_id
         );
 
-        // debugger;
-        const params = {
+        const listUserParams = {
           page: 1,
           per_page: 1000,
           filter: {
@@ -62,20 +60,53 @@ export const useQueryContacts = (
           },
         };
         // fetch contact data based on relationships query
-        const contactData = await PromisedQb.listUsers(params);
-        const { items } = contactData || {};
-        let formattedContactData = items.map((item) => {
-          const relationshipProps = relationships.find(
-            (relationship) => relationship.user_id === item.user.id
-          );
-
-          if (relationshipProps) {
-            return { ...item.user, relationship: relationshipProps };
-          }
-          return item.user;
-        });
+        const contactData = await PromisedQb.listUsers(listUserParams);
+        const { items: contactDataItems } = contactData || {};
         debugger;
-        return formattedContactData || [];
+        const dialogsParams = {
+          limit: 1000,
+        };
+        const qbDialogs = await PromisedQb.dialogList(dialogsParams);
+        console.log("qbDialods", qbDialogs);
+        debugger;
+        const contactsPayload = () => {
+          if (!contactDataItems?.length) {
+            return undefined;
+          }
+          const returnPayload = [] as Array<
+            | {
+                user: TypeDataEntityQbUser;
+                dialog: TypeDataEntityDialog | undefined;
+                relationship: TypeDataEntityRelationship;
+              }
+            | undefined
+          >;
+          contactDataItems.forEach((contact) => {
+            if (contact) {
+
+              // attach relationship props
+              const relationshipProps = relationships.find(
+                (relationship) => relationship.user_id === contact.user.id
+              );
+
+              const findDialog = qbDialogs?.items?.find(
+                (dialog) =>
+                  dialog.data.relationship_id ===
+                  relationshipProps?.relationship_id
+              );
+              if (relationshipProps) {
+                returnPayload.push({
+                  user: contact.user,
+                  dialog: findDialog,
+                  relationship: relationshipProps,
+                });
+              }
+            }
+          });
+
+          return returnPayload;
+        };
+        return contactsPayload() || [];
       } catch (e) {}
     },
     {
@@ -83,27 +114,23 @@ export const useQueryContacts = (
       keepPreviousData: true,
       initialData: () => {
         const contacts = clientData.getContacts();
-        if (!contacts?.length) {
-          return [];
-        }
         // debugger;
-        return contacts.filter((contact) => {
+        return contacts?.filter((contact) => {
           switch (props.status) {
             case "pending":
-              if (contact.relationship.status === 0) {
-                debugger;
+              if (contact?.relationship.status === 0) {
+                // debugger;
                 return true;
               }
               break;
             case "connected":
-              if (contact.relationship.status === 1) {
+              if (contact?.relationship.status === 1) {
                 return true;
               }
               break;
           }
           return false;
         });
-        //  return data;
       },
     }
   );
