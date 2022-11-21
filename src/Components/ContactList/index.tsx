@@ -10,13 +10,12 @@ import ContactListItem from "../ContactListItem";
 const ContactList = ({
   data = [],
 }: {
-  data: Array<TypeDataEntityContact | null>;
+  data: Array<TypeDataEntityContact | null> | undefined;
 }) => {
   const dispatch = useAppDispatch();
-  function onClick(user: TypeDataEntityContact) {
-    dispatch(setSelectedProfile(user.id));
+  function onClick(contact: TypeDataEntityContact) {
+    dispatch(setSelectedProfile(contact?.user.id));
   }
-
   const subscribedUsers = useMemo(() => {
     return data; // return data.filter((user) => user?.friend.subscription !== "none");
   }, [data]);
