@@ -4,6 +4,7 @@ import {
   FormLabel,
   Grid,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useQueryFirebaseUserData } from "../../ReactQuery";
@@ -13,7 +14,51 @@ import logo from "../../Files/logo.png";
 import { FirebaseActions } from "../../Firebase";
 import { useMutationLogout } from "../../ReactQuery/Mutations/useMutationLogout";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Chat from "../Chat";
+import { useAppSelector } from "../../Redux/useAppSelector";
+
+const WelcomeElements = () => {
+  return (
+    <Stack flex={1} height="100vh" justifyContent="center">
+      <Typography variant="h4">Welcome To Whatsapp-clone!</Typography>
+      <Typography variant="h5" color="GrayText">
+        Select a contact to begin chatting
+      </Typography>
+    </Stack>
+  );
+};
+const RightScreenContents = () => {
+  const [miniRoute, setMiniRoute] = useState("/");
+  const selectedProfile = useAppSelector(
+    (state) => state.AppState.selectedProfile
+  );
+  useEffect(() => {
+    switch (miniRoute) {
+      case "/":
+        if (selectedProfile) {
+          setMiniRoute("/chat");
+        }
+        break;
+      case "/chat":
+        break;
+      case "/profile":
+        break;
+    }
+  }, [selectedProfile, miniRoute]);
+  switch (miniRoute) {
+    case "/chat":
+      return <Chat />;
+    case "/profile":
+      return <Profile />;
+    case "/":
+    default:
+      return <WelcomeElements />;
+  }
+};
+
 const Auth = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const { data: userData } = useQueryFirebaseUserData();
   const { mutateAsync: signOutMutation } = useMutationLogout();
@@ -75,12 +120,21 @@ const Auth = () => {
   }
   return (
     <Stack direction="column">
-      <Grid direction="row" container >
-        <Grid item xs={3} minWidth={250}>
+      <Grid direction="row" container>
+        <Grid
+          item
+          xs={3}
+          sx={{
+            borderWidth: 0,
+            borderRightWidth: 2,
+            borderRightColor: theme.palette.secondary.main,
+            borderStyle: "solid",
+          }}
+        >
           <Contacts />
         </Grid>
-        <Grid item xs={8}>
-          <Profile />
+        <Grid item xs={9}>
+          <RightScreenContents />
         </Grid>
       </Grid>
       <Button
