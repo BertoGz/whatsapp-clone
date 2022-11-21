@@ -15,12 +15,15 @@ export * from "./Queries/useQueryFirebaseUserData";
 export * from "./Queries/useQueryQuickbloxUserData";
 export * from "./Queries/useQueryContacts";
 export * from "./Queries/useQueryContact";
-export * from "./Queries/useQueryDialogs"
+export * from "./Queries/useQueryDialogs";
 export const clientData = {
   getFirebaseUserData: () =>
-    queryClient.getQueryData("firebaseUserData") as User,
+    queryClient.getQueryData("firebaseUserData") as User | undefined,
   getQuickbloxUserData: () => queryClient.getQueryData("qbUserData") as any,
-  getContacts: () => queryClient.getQueryData("contacts") as Array<TypeDataEntityContact>,
+  getContacts: () =>
+    queryClient.getQueryData("contacts") as TypeDataEntityContact[] | undefined,
   getPendingContacts: () =>
-    queryClient.getQueryData("pendingContacts") as Array<any>,
+    queryClient.getQueryData("pendingContacts") as
+      | TypeDataEntityContact[]
+      | undefined,
 };
