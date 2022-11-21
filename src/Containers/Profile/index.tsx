@@ -10,12 +10,11 @@ import {
 import { Email, Home, Phone } from "@mui/icons-material";
 import EditableLabel from "../../Components/EditableLabel";
 import { Box } from "@mui/system";
-import { users } from "../../Data";
 import { useAppSelector } from "../../Redux/useAppSelector";
 import { useQueryContact } from "../../ReactQuery";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
-//const settings = [{type:'email',}];
+
 const BaseInfo = ({
   val = "",
   label = "",
@@ -141,62 +140,50 @@ const BaseInfo = ({
 const Profile = () => {
   const { selectedProfile } = useAppSelector((state) => state.AppState);
   const { data } = useQueryContact(selectedProfile);
-  console.log("data", data);
-
-  if (selectedProfile) {
-    const { items } = data || {};
-    if (!items?.length) {
-      return <></>;
-    }
-    const { full_name, email, phone } = items[0] || {};
-    return (
-      <Stack direction="column" divider={<Divider />} flex={1}>
-        <Stack alignItems={"center"}>
-          <Avatar sx={{ height: 100, width: 100 }} src={profilepic} />
-          <Typography variant="h5" fontWeight={"bold"}>
-            {full_name}
-          </Typography>
-          <Typography color="GrayText" variant="h6" fontWeight={"600"}>
-            {email}
-          </Typography>
-        </Stack>
-
-        <Grid
-          container
-          spacing={2}
-          alignItems="flex-start"
-          justifyContent={"center"}
-          paddingTop={2}
-        >
-          <Grid item>
-            <BaseInfo
-              val={full_name}
-              label="username"
-              type="username"
-              canEdit={false}
-            />
-          </Grid>
-          <Grid item>
-            <BaseInfo val={`${phone}`} label="home phone" type="phone" />
-          </Grid>
-          <Grid item>
-            <BaseInfo val={email} label="work email" type="email" />
-          </Grid>
-          {false && (
-            <Grid item>
-              <BaseInfo val={"address"} label="home address" type="address" />
-            </Grid>
-          )}
-        </Grid>
-      </Stack>
-    );
+  if (!data || !selectedProfile) {
+    return <></>;
   }
+  const profileData = data.items[0];
+  const { full_name, email, phone } = profileData || {};
   return (
-    <Stack flex={1} height="100vh" justifyContent="center">
-      <Typography variant="h4">Welcome To Whatsapp-clone!</Typography>
-      <Typography variant="h5" color="GrayText">
-        Select a contact to begin chatting
-      </Typography>
+    <Stack direction="column" divider={<Divider />} flex={1}>
+      <Stack alignItems={"center"}>
+        <Avatar sx={{ height: 100, width: 100 }} src={profilepic} />
+        <Typography variant="h5" fontWeight={"bold"}>
+          {full_name}
+        </Typography>
+        <Typography color="GrayText" variant="h6" fontWeight={"600"}>
+          {email}
+        </Typography>
+      </Stack>
+
+      <Grid
+        container
+        spacing={2}
+        alignItems="flex-start"
+        justifyContent={"center"}
+        paddingTop={2}
+      >
+        <Grid item>
+          <BaseInfo
+            val={full_name}
+            label="username"
+            type="username"
+            canEdit={false}
+          />
+        </Grid>
+        <Grid item>
+          <BaseInfo val={`${phone}`} label="home phone" type="phone" />
+        </Grid>
+        <Grid item>
+          <BaseInfo val={email} label="work email" type="email" />
+        </Grid>
+        {false && (
+          <Grid item>
+            <BaseInfo val={"address"} label="home address" type="address" />
+          </Grid>
+        )}
+      </Grid>
     </Stack>
   );
 };
