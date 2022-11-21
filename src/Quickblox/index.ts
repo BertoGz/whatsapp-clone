@@ -144,7 +144,7 @@ export const PromisedQb = {
           res(response);
         }
       });
-    });
+    }) as { items: Array<{ user: TypeDataEntityQbUser }> };
   },
   dialogCreate: async (params: any) => {
     return new Promise((res, rej) => {
@@ -163,6 +163,24 @@ export const PromisedQb = {
           rej(error);
         }
         res(dialogs);
+      });
+    }) as { items: Array<TypeDataEntityDialog> };
+  },
+  messagesList: async ({ dialogId = "", limit = 100, skip = 0 }) => {
+    // var dialogId = "5356c64ab35c12bd3b108a41";
+
+    const params = {
+      chat_dialog_id: dialogId,
+      sort_desc: "date_sent",
+      limit,
+      skip,
+    };
+    return new Promise((res, rej) => {
+      return QB.chat.message.list(params, (error, messages) => {
+        if (error) {
+          rej(error);
+        }
+        res(messages);
       });
     });
   },
