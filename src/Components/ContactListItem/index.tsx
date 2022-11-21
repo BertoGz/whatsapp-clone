@@ -66,14 +66,16 @@ const ContactListItem = ({
   onAccept = () => {},
   onReject = () => {},
 }: {
-  item: TypeDataEntityQbUser | null;
+  item: TypeDataEntityContact;
   onClick?: (a?: any) => void;
   variant?: "request" | "";
   onAccept?: (a?: any) => void;
   onReject?: (a?: any) => void;
 }) => {
   const theme = useTheme();
-  const { full_name, email, id } = item || {};
+  const { user, dialog } = item || {};
+  const { full_name, email, id } = user || {};
+  const { last_message } = dialog || {};
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );
@@ -88,11 +90,17 @@ const ContactListItem = ({
       sx={{
         alignItems: "flex-start",
         flexDirection: "column",
-        backgroundColor: isSelected ? theme.palette.secondary.dark : null,
+        backgroundColor: isSelected ? theme.palette.secondary.light : null,
       }}
       onClick={onClick}
     >
-      <Stack direction="row" alignItems="center" width="100%" height="60px">
+      <Stack
+        direction="row"
+        alignItems="center"
+        width="100%"
+        height="60px"
+        overflow={"hidden"}
+      >
         <Avatar
           alt={fullname}
           src={profilepic}
@@ -130,8 +138,9 @@ const ContactListItem = ({
               textAlign={"left"}
               variant="body2"
               color="secondary"
+              whiteSpace="nowrap"
             >
-              Start messaging {fullname}
+              {!last_message ? `Start messaging ${fullname}` : last_message}
             </Typography>
           </Stack>
           <Divider />
