@@ -22,7 +22,23 @@ declare module "*.png" {
   export default "" as string;
 }
 type TypeDataEntityQbUserSession = { user_id: number };
-type TypeDataEntityDialog = {};
+type TypeDataEntityDialog = {
+  _id: string;
+  created_at: string;
+  data: { relationship_id: number };
+  last_message: string | null;
+  last_message_date_sent: string | null;
+  last_message_id: string | null;
+  last_message_user_id: string | null;
+  name: string;
+  occupants_ids: Array<number>;
+  photo: string | null;
+  type: 1 | 2 | 3;
+  updated_at: string;
+  user_id: number;
+  xmpp_room_jid: number | null;
+  unread_messages_count: number;
+};
 type TypeDataEntityRelationship = {
   user_id: number;
   relationship_id: number;
@@ -50,6 +66,13 @@ type TypeDataEntityQbUser = {
   user_tags: any;
   relationship: TypeDataEntityRelationship;
 };
-type TypeDataEntityContact = TypeDataEntityQbUser & {
+type TypeDataEntityContact = {
+  user: TypeDataEntityQbUser;
+  dialog: TypeDataEntityDialog;
   relationship: TypeDataEntityRelationship;
+};
+type TypePropsContactListItem = {
+  user: TypeDataEntityContact;
+} & {
+  dialog: TypeDataEntityDialog;
 };
