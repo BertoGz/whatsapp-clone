@@ -139,12 +139,12 @@ const BaseInfo = ({
 
 const Profile = () => {
   const { selectedProfile } = useAppSelector((state) => state.AppState);
-  const { data } = useQueryContact(selectedProfile);
-  if (!data || !selectedProfile) {
+  const { data: contact } = useQueryContact(selectedProfile);
+  if (!contact || !selectedProfile) {
     return <></>;
   }
-  const profileData = data.items[0];
-  const { full_name, email, phone } = profileData || {};
+
+  const { full_name, email, phone } = contact?.user || {};
   return (
     <Stack direction="column" divider={<Divider />} flex={1}>
       <Stack alignItems={"center"}>
