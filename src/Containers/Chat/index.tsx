@@ -1,22 +1,45 @@
 // @ts-nocheck
-import { MessageBox } from "react-chat-elements";
-import { Box, Typography, useTheme } from "@mui/material";
+import { MessageBox, Input } from "react-chat-elements";
+
+import {
+  Box,
+  Button,
+  Stack,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import "react-chat-elements/dist/main.css";
 import { useQueryMessages } from "../../ReactQuery/Queries/useQueryMessages";
 import { useAppSelector } from "../../Redux/useAppSelector";
-import { useQueryQbDialogs } from "../../ReactQuery";
+import { useQueryContact } from "../../ReactQuery";
+import { useMemo, useRef, useState } from "react";
+import { useMutationSendMessage } from "../../ReactQuery/Mutations/useMutationSendMessage";
 
-const TextMessage = () => {
+const TextMessage = ({
+  message,
+  extraProps,
+}: {
+  message: TypeDataEntityMessage;
+  extraProps: { isSender: boolean };
+}) => {
+  const { message: text } = message || {};
+  const { isSender } = extraProps || {};
   return (
     <MessageBox
-      position={"left"}
+      position={isSender ? "right" : "left"}
       type={"text"}
-      title={"Message Box Title"}
-      text="Here is a text type message box"
+      text={text}
     />
   );
 };
-const PhotoMessage = () => {
+const PhotoMessage = ({
+  message,
+  extraProps,
+}: {
+  message: TypeDataEntityMessage;
+  extraProps: { isSender: boolean };
+}) => {
   return (
     <MessageBox
       position={"left"}
@@ -46,14 +69,68 @@ const VideoMessage = () => {
     />
   );
 };
+const InputSection = ({ dialogId, opponentId }) => {
+  const [input, setInput] = useState("");
+
+  console.log("input", input);
+  const { mutateAsync } = useMutationSendMessage({ dialogId });
+  const elRef = useRef();
+  console.log("ref", elRef);
+  function onSendMessage() {
+    debugger;
+    mutateAsync(
+      { dialogId, opponentId, message: input },
+      {
+        onSuccess: () => {
+          setInput("");
+          //  ref.current;
+        },
+      }
+    );
+  }
+  return (
+    <Stack direction="row" sx={{ backgroundColor: "Background" }}>
+      <TextField
+        value={input}
+        fullWidth
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <Button color="secondary" disabled={!input} onClick={onSendMessage}>
+        Send
+      </Button>
+    </Stack>
+  );
+};
 const Chat = () => {
   const theme = useTheme();
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );
-  const { data: dialogs } = useQueryQbDialogs();
-  const correctDialog = dialogs?.items.find(dialog=>dialog)
-  const { data: messages } = useQueryMessages({});
+  const { data: contact } = useQueryContact(selectedProfile);
+  const { dialog, user } = contact || {};
+  const { _id } = dialog || {};
+  const { id: opponent_id } = user || {};
+  //const correctDialog = dialogs?.items.find(dialog=>dialog)
+  const { data: messagesResponse } = useQueryMessages({ dialogId: _id });
+  const { items: messages } = messagesResponse || {};
+  console.log("!!@@messages", messagesResponse);
+  const MessageList = useMemo(() => {
+    return messages?.reverse()?.map((message) => {
+      const { attachments, sender_id } = message || {};
+      let messageType: "photo" | "text" = "text";
+      if (attachments?.length > 0) {
+        messageType = "photo";
+      }
+      const extraProps = {};
+      extraProps.isSender = sender_id !== opponent_id;
+      switch (messageType) {
+        case "text":
+          return <TextMessage {...{ message, extraProps }} />;
+        case "photo":
+          return <PhotoMessage {...{ message, extraProps }} />;
+      }
+    });
+  }, [messages]);
   return (
     <Box
       sx={{
@@ -62,11 +139,8 @@ const Chat = () => {
       }}
     >
       <Typography>This is the chat screen</Typography>
-
-      <TextMessage />
-
-      <PhotoMessage />
-      <VideoMessage />
+      {MessageList}
+      <InputSection dialogId={_id} opponentId={opponent_id} />
     </Box>
   );
 };
