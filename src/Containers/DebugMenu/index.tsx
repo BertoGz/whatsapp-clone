@@ -30,9 +30,13 @@ const DebugMenu = () => {
   }
   function tryRemoveFriend() {
     const contacts = clientData.getContacts();
-    const user = contacts.filter(
-      (contact) => contact.id === parseInt(removeFriendInput, 10)
+    const user = contacts?.filter(
+      (contact) => contact.user.id === parseInt(removeFriendInput, 10)
     );
+    if (!user) {
+      console.log("no user found");
+      return;
+    }
 
     updateRelationshipMutation({
       relationship_id: user[0].relationship.relationship_id,
