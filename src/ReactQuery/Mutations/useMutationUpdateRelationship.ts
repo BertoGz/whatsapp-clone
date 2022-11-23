@@ -17,7 +17,6 @@ async function updateRelationshipFn(props: TypeParams) {
       return Promise.resolve(res);
     })
     .catch((e) => {
-      debugger;
       return Promise.reject(e);
     });
 }

@@ -12,7 +12,6 @@ async function sendFriendRequestFn(email: string) {
   const responseOpponent = (await getQuickbloxUserByEmailRequest({ email })
     .then((res) => res)
     .catch(function (error) {
-      debugger;
       console.log(error);
       // return Promise.reject(error);
     })) as any;
