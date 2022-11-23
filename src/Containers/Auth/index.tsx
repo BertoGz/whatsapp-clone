@@ -119,8 +119,11 @@ const Auth = () => {
     );
   }
   return (
-    <Stack direction="column">
-      <Grid direction="row" container>
+    <Stack
+      direction="column"
+      sx={{ height: window.innerHeight / 1, overflow: "clip" }}
+    >
+      <Grid direction="row" container sx={{ height: "100%" }}>
         <Grid
           item
           xs={3}
@@ -129,28 +132,15 @@ const Auth = () => {
             borderRightWidth: 2,
             borderRightColor: theme.palette.secondary.main,
             borderStyle: "solid",
+            height: "100%",
           }}
         >
           <Contacts />
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={9} sx={{ height: "100%" }}>
           <RightScreenContents />
         </Grid>
       </Grid>
-      <Button
-        onClick={() => {
-          if (email) {
-            //  debugger
-            signOutMutation(null, {
-              onSuccess: () => {
-                navigate("/");
-              },
-            });
-          }
-        }}
-      >
-        Logout
-      </Button>
     </Stack>
   );
 };
