@@ -10,6 +10,7 @@ import {
 import { Stack } from "@mui/system";
 import { ArrowForwardIos } from "@mui/icons-material";
 import { useAppSelector } from "../../Redux/useAppSelector";
+import { colorHelper } from "../../Theme";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
 
@@ -73,6 +74,8 @@ const ContactListItem = ({
   onReject?: (a?: any) => void;
 }) => {
   const theme = useTheme();
+  const contrastText = colorHelper.contrastText("secondaryMain");
+  const highlightColor = colorHelper.lightenColor("secondaryMain", 0.001);
   const { user, dialog } = item || {};
   const { full_name, email, id } = user || {};
   const { last_message } = dialog || {};
@@ -86,11 +89,25 @@ const ContactListItem = ({
   const fullname = full_name;
 
   return (
-    <ButtonBase
+    <Button
+      variant="contained"
+      disableElevation
       sx={{
+        textTransform: "none",
         alignItems: "flex-start",
         flexDirection: "column",
-        backgroundColor: isSelected ? theme.palette.secondary.light : null,
+        p: 0,
+        m: 0,
+        borderRadius: 0,
+        outlineStyle: "none",
+        backgroundColor: isSelected
+          ? theme.palette.secondary.dark
+          : theme.palette.secondary.light,
+        ":hover": {
+          backgroundColor: isSelected
+            ? highlightColor
+            : theme.palette.secondary.main,
+        },
       }}
       onClick={onClick}
     >
@@ -122,14 +139,21 @@ const ContactListItem = ({
                 lineHeight={1}
                 textAlign={"left"}
                 fontWeight={"bold"}
-                color="secondary"
+                sx={{
+                  color: contrastText,
+                }}
               >
                 {fullname}
               </Typography>
-              <Stack gap={1} direction="row" alignItems={"center"}>
-                <Typography color="secondary" lineHeight={1}>
-                  9:33 AM
-                </Typography>
+              <Stack
+                gap={1}
+                direction="row"
+                alignItems={"center"}
+                sx={{
+                  color: contrastText,
+                }}
+              >
+                <Typography lineHeight={1}>9:33 AM</Typography>
                 <ArrowForwardIos color="secondary" sx={{ fontSize: "10px" }} />
               </Stack>
             </Stack>
@@ -137,8 +161,10 @@ const ContactListItem = ({
               lineHeight={1.5}
               textAlign={"left"}
               variant="body2"
-              color="secondary"
               whiteSpace="nowrap"
+              sx={{
+                color: contrastText,
+              }}
             >
               {!last_message ? `Start messaging ${fullname}` : last_message}
             </Typography>
@@ -154,7 +180,7 @@ const ContactListItem = ({
           />
         )}
       </Stack>
-    </ButtonBase>
+    </Button>
   );
 };
 export default ContactListItem;
