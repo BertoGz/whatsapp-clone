@@ -167,8 +167,6 @@ export const PromisedQb = {
     }) as { items: Array<TypeDataEntityDialog> };
   },
   messagesList: async ({ dialogId = "", limit = 100, skip = 0 }) => {
-    // var dialogId = "5356c64ab35c12bd3b108a41";
-
     const params = {
       chat_dialog_id: dialogId,
       sort_desc: "date_sent",
@@ -182,6 +180,29 @@ export const PromisedQb = {
         }
         res(messages);
       });
+    });
+  },
+  sendMessage: async ({ dialogId = "", opponentId = 0, message }) => {
+    const messageProps = {
+      type: "chat",
+      body: message,
+      extension: {
+        save_to_history: 1,
+        dialog_id: dialogId,
+      },
+      markable: 1,
+    };
+
+    return new Promise((res, rej) => {
+      try {
+        const mes = QB.chat.send(opponentId, messageProps);
+        res(mes);
+      } catch (e) {
+        rej(e);
+        if (e.name === "ChatNotConnectedError") {
+          // not connected to chat
+        }
+      }
     });
   },
 };
