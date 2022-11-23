@@ -9,7 +9,7 @@ import DebugMenu from "./Containers/DebugMenu";
 const Hooks = () => {
   useFirebaseAutoLogin();
   useQbSession();
-  useQbChat()
+  useQbChat();
   return <></>;
 };
 function App() {
@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/user" element={<Auth />} />
         </Routes>
-        <DebugMenu/>
+        {false && <DebugMenu />}
         <Hooks />
       </BrowserRouter>
     </div>
