@@ -8,14 +8,13 @@ export const useQueryContact = (id: number) => {
   const chatConnected = useAppSelector(
     (state) => state.Quickblox.chatConnected
   );
-  const query = useQuery<
-    any,
-    any,
-    { items: Array<TypeDataEntityQbUser | null> }
-  >(
+  const query = useQuery<any, any, TypeDataEntityContact | null>(
     key,
     async () => {
       try {
+        const contacts = clientData.getContacts();
+        return contacts?.find((contact) => contact?.user?.id === id);
+        /*
         //const contactKeysJoined = contactKeys.join();
         const filter = { field: "id", param: "eq", value: id };
         //field_type+field_name+operator+value'
@@ -30,7 +29,7 @@ export const useQueryContact = (id: number) => {
         let formattedData = items.map((item) => {
           return item.user;
         });
-        return { ...contactData, items: formattedData || [] };
+        return { ...contactData, items: formattedData || [] };*/
       } catch (e) {}
     },
     {
