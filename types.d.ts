@@ -22,6 +22,21 @@ declare module "*.png" {
   export default "" as string;
 }
 type TypeDataEntityQbUserSession = { user_id: number };
+type TypeDataEntityMessage = {
+  all_read: boolean;
+  attachments: Array<unknown>;
+  chat_dialog_id: string; //dialog_id
+  created_at: string;
+  date_sent: number;
+  delivered_ids: Array<number>;
+  message: string;
+  read: boolean;
+  read_ids: Array<number>;
+  recipient_id: number;
+  sender_id: number;
+  updated_at: string;
+  _id: number; // message_id
+};
 type TypeDataEntityDialog = {
   _id: string;
   created_at: string;
