@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useMemo } from "react";
 
@@ -9,8 +9,10 @@ import ContactListItem from "../ContactListItem";
 
 const ContactList = ({
   data = [],
+  loading = false,
 }: {
   data: Array<TypeDataEntityContact | null> | undefined;
+  loading: boolean;
 }) => {
   const dispatch = useAppDispatch();
   function onClick(contact: TypeDataEntityContact) {
@@ -29,15 +31,19 @@ const ContactList = ({
           justifyContent={"center"}
           alignItems="center"
         >
-          <Typography variant="h5" color="white" textAlign={"center"}>
-            Connected users will appear here.
-          </Typography>
+          {loading ? (
+            <CircularProgress sx={{mt:2}}/>
+          ) : (
+            <Typography variant="h5" color="white" textAlign={"center"}>
+              Connected users will appear here.
+            </Typography>
+          )}
         </Box>
       </>
     );
   }
   return (
-    <Stack direction={"column"} flex={1}>
+    <Stack direction={"column"} sx={{ backgroundColor: "white" }}>
       {subscribedUsers.map((item) => {
         if (!item) {
           return <></>;
