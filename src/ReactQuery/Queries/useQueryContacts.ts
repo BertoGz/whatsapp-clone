@@ -41,7 +41,6 @@ export const useQueryContacts = (
 
           return false;
         });
-        debugger;
         // early return case
         if (friendRelationships?.length === 0) {
           return [];
@@ -62,13 +61,10 @@ export const useQueryContacts = (
         // fetch contact data based on relationships query
         const contactData = await PromisedQb.listUsers(listUserParams);
         const { items: contactDataItems } = contactData || {};
-        debugger;
         const dialogsParams = {
           limit: 1000,
         };
         const qbDialogs = await PromisedQb.dialogList(dialogsParams);
-        console.log("qbDialods", qbDialogs);
-        debugger;
         const contactsPayload = () => {
           if (!contactDataItems?.length) {
             return undefined;
@@ -83,15 +79,13 @@ export const useQueryContacts = (
           >;
           contactDataItems.forEach((contact) => {
             if (contact) {
-
               // attach relationship props
               const relationshipProps = relationships.find(
                 (relationship) => relationship.user_id === contact.user.id
               );
-
               const findDialog = qbDialogs?.items?.find(
                 (dialog) =>
-                  dialog.data.relationship_id ===
+                  dialog?.data?.relationship_id ===
                   relationshipProps?.relationship_id
               );
               if (relationshipProps) {
