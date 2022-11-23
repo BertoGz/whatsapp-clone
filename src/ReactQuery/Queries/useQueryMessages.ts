@@ -9,7 +9,11 @@ export const useQueryMessages = (
     (state) => state.Quickblox.chatConnected
   );
   const queryKey = ["messages", props.dialogId];
-  const query = useQuery(
+  const query = useQuery<
+    any,
+    any,
+    { items: Array<TypeDataEntityMessage>; skip: number; limit: number }
+  >(
     queryKey,
     async () => {
       const response = await PromisedQb.messagesList({
@@ -17,9 +21,10 @@ export const useQueryMessages = (
         limit: props.limit,
         skip: props.skip,
       });
-      debugger;
+
+      return response;
     },
-    { enabled: chatConnected && props.dialogId !== "" }
+    { enabled: chatConnected && props.dialogId !== "" && !!props.dialogId }
   );
   return query;
 };
