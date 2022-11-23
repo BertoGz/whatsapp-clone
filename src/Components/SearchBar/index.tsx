@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  ButtonBase,
-  OutlinedInput,
-  Popover,
-  useTheme,
-} from "@mui/material";
+import { ButtonBase, OutlinedInput, Popover } from "@mui/material";
 import { Stack } from "@mui/system";
 import {
   Notifications,
@@ -14,10 +9,10 @@ import {
 } from "@mui/icons-material";
 import { RequestsModal } from "../../Containers/RequestsModal";
 import { AddContactModal } from "../../Containers/AddContactModal";
+import { colorHelper } from "../../Theme";
 
 let modalOpen = "";
 const SearchBar = () => {
-  const theme = useTheme();
   const [input, setInput] = useState("");
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -46,13 +41,17 @@ const SearchBar = () => {
   return (
     <>
       <ButtonBase sx={{ alignSelf: "flex-start" }}>
-        <Settings color="secondary" />
+        <Settings
+          sx={{
+            color: colorHelper.lightenColor('secondaryMain', 0.6),
+          }}
+        />
       </ButtonBase>
       <Stack
         direction="column"
         alignItems="flex-end"
         spacing={2}
-        sx={{ paddingX: 2 , pt: 2 }}
+        sx={{ paddingX: 2, pt: 2 }}
       >
         <OutlinedInput
           color="secondary"
@@ -66,15 +65,31 @@ const SearchBar = () => {
             const updateVal = e.target.value;
             setInput(updateVal);
           }}
-          startAdornment={<Search color="secondary" />}
+          startAdornment={<Search color="primary" />}
         />
 
         <Stack direction="row" spacing={1}>
           <ButtonBase onClick={handleToggleAddContactModal}>
-            <PersonAdd fontSize="large" color="secondary" />
+            <PersonAdd
+              fontSize="large"
+              sx={{
+                color: colorHelper.lightenColor(
+                  'secondaryMain',
+                  0.6
+                ),
+              }}
+            />
           </ButtonBase>
           <ButtonBase onClick={handleToggleRequestsModal}>
-            <Notifications fontSize="large" color="secondary" />
+            <Notifications
+              fontSize="large"
+              sx={{
+                color: colorHelper.lightenColor(
+                  'secondaryMain',
+                  0.6
+                ),
+              }}
+            />
           </ButtonBase>
         </Stack>
         <Popover
