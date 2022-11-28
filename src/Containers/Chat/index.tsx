@@ -17,10 +17,8 @@ import { useQueryContact } from "../../ReactQuery";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutationSendMessage } from "../../ReactQuery/Mutations/useMutationSendMessage";
 import { PressableText } from "../../Components/ClickableText";
-import {
-  VideoCameraFrontRounded,
-} from "@mui/icons-material";
-import { colorHelper } from "../../Theme";
+import { VideoCameraFrontRounded } from "@mui/icons-material";
+import { colorHelper, theme } from "../../Theme";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
 
@@ -91,7 +89,6 @@ const InputSection = ({ dialogId, opponentId }) => {
 
   console.log("input", input);
   const { mutateAsync } = useMutationSendMessage({ dialogId });
-  const elRef = useRef();
   function onSendMessage() {
     debugger;
     mutateAsync(
@@ -105,17 +102,39 @@ const InputSection = ({ dialogId, opponentId }) => {
     );
   }
   return (
-    <Stack direction="row" sx={{ backgroundColor: "Background" }}>
-      <TextField
-        value={input}
-        fullWidth
-        onChange={(e) => setInput(e.target.value)}
-        InputProps={{ height: "20px" }}
-      />
-      <Button color="secondary" disabled={!input} onClick={onSendMessage}>
-        Send
-      </Button>
-    </Stack>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        align: "center",
+        backgroundColor: theme.palette.secondary.dark,
+      }}
+    >
+      <Stack
+        direction="row"
+        sx={{
+          width: "100%",
+          maxWidth: "1000px",
+          backgroundColor: theme.palette.background.default,
+          margin: 2,
+        }}
+      >
+        <TextField
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          sx={{ width: "100%", borderRadius: 0, justifyContent: "center" }}
+          InputProps={{ style: { borderRadius: 0, height: "40px" } }}
+        />
+        <Button
+          sx={{ textTransform: "none" }}
+          color="secondary"
+          disabled={!input}
+          onClick={onSendMessage}
+        >
+          Send
+        </Button>
+      </Stack>
+    </Box>
   );
 };
 const Chat = () => {
@@ -124,7 +143,7 @@ const Chat = () => {
     (state) => state.AppState.selectedProfile
   );
   const { data: contact } = useQueryContact(selectedProfile);
-  const { dialog, user } = contact || {};
+  const { dialog, user } = contact[0] || {};
   const { _id } = dialog || {};
   const { id: opponent_id } = user || {};
   //const correctDialog = dialogs?.items.find(dialog=>dialog)
@@ -176,8 +195,8 @@ const Chat = () => {
       <Stack
         direction="column"
         sx={{
+          width: "100%",
           height: "100%",
-          backgroundColor: theme.palette.secondary.light,
         }}
       >
         <Stack
@@ -206,14 +225,17 @@ const Chat = () => {
             />
             <Typography
               sx={{
-                color: colorHelper.contrastText('secondaryMain'),
+                color: colorHelper.contrastText("secondaryMain"),
               }}
             >
               {user?.full_name}
             </Typography>
           </Stack>
-          <Box p={2} >
-            <VideoCameraFrontRounded sx={{color:colorHelper.contrastText('secondaryMain')}} fontSize="large"/>
+          <Box p={2}>
+            <VideoCameraFrontRounded
+              sx={{ color: colorHelper.contrastText("secondaryMain") }}
+              fontSize="large"
+            />
           </Box>
         </Stack>
         <div
@@ -227,22 +249,38 @@ const Chat = () => {
             justifyItems: "center",
             display: "flex",
             flexDirection: "column",
-            backgroundImage: `url(${imgUrl})`,
-            backgroundSize: "1000px",
-            backgroundPosition: "center center",
-            backgroundRepeat: "repeat",
-            backgroundBlendMode: "soft-light",
+            height: "100%",
+            zIndex: -9,
             backgroundColor: theme.palette.secondary.dark,
           }}
         >
           <LoadMoreSection />
           <Stack
+            sx={{ width: "100%" }}
+            alignSelf={"center"}
             direction="column"
-            justifySelf={"flex-end"}
-            maxWidth={"1000px"}
+            maxWidth={"800px"}
           >
             {MessageList}
           </Stack>
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+              overflow: "hidden",
+              backgroundImage: `url(${imgUrl})`,
+              backgroundSize: "1000px",
+              backgroundPosition: "center center",
+              backgroundRepeat: "repeat",
+              backgroundBlendMode: "multiply",
+              backgroundColor: theme.palette.secondary.dark,
+              zIndex: -10,
+              opacity:.2
+            }}
+          />
         </div>
 
         <InputSection dialogId={_id} opponentId={opponent_id} />
