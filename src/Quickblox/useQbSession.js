@@ -1,9 +1,8 @@
 import * as QB from "quickblox/quickblox";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { PromisedQb } from ".";
 import { useQueryFirebaseUserData } from "../ReactQuery";
 import {
-  resetState,
   setAppSessionInvalid,
   setAppSessionValid,
   setQbInitSuccess,
@@ -18,26 +17,12 @@ var AUTH_SECRET = "gFYev7gKMzmAAcG";
 var ACCOUNT_KEY = "ub3Nry9YQWQHnWQqLKez";
 var CONFIG = { debug: false };
 
-// Hook
-function usePrevious(value) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef();
-  // Store current value in ref
-  useEffect(() => {
-    ref.current = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
-  return ref.current;
-}
-
 export const useQbSession = () => {
   const { data: userData } = useQueryFirebaseUserData();
-  const prevUserData = usePrevious(userData);
+
   const { email, uid } = userData || {};
-  const { qbInitialized, appSessionValid, userSessionValid } = useAppSelector(
-    (state) => state.Quickblox
-  );
+  const { qbInitialized, appSessionValid, userSessionValid } =
+    useAppSelector((state) => state.Quickblox);
   const dispatch = useAppDispatch();
   async function tryQbInit() {
     await QB.init(APPLICATION_ID, AUTH_KEY, AUTH_SECRET, ACCOUNT_KEY, CONFIG);
@@ -70,7 +55,7 @@ export const useQbSession = () => {
 
       let userExists = null;
 
-      const loggedUser = await PromisedQb.loginUser(loginParams)
+      await PromisedQb.loginUser(loginParams)
         .then((res) => {
           userExists = true;
           dispatch(setUserSessionValid());
@@ -105,12 +90,7 @@ export const useQbSession = () => {
       }
     }
   }
-  useEffect(() => {
-    if (prevUserData !== userData && !userData) {
-      // clear quickblox
-      dispatch(resetState());
-    }
-  }, [userData]);
+
   useEffect(() => {
     if (qbInitialized === null && userData) {
       tryQbInit();
