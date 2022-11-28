@@ -78,3 +78,11 @@ export async function getQuickbloxUserByEmailRequest({ email = "" }) {
     method: "GET",
   });
 }
+export async function devDeleteDialog({ relationship_id = 0 }) {
+  return axiosRequest({
+    endpoint: "/dev_delete_dialogue",
+    useBaseUrl: true,
+    params: { relationship_id },
+    method: "POST",
+  });
+}
