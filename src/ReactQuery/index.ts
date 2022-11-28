@@ -19,8 +19,19 @@ export const clientData = {
   getFirebaseUserData: () =>
     queryClient.getQueryData("firebaseUserData") as User | undefined,
   getQuickbloxUserData: () => queryClient.getQueryData("qbUserData") as any,
-  getContacts: () =>
-    queryClient.getQueryData("contacts") as TypeDataEntityContact[] | undefined,
+  getContacts: () => {
+    const cache = queryClient.getQueryCache().findAll("contacts");
+
+    let queryData = [] as Array<TypeDataEntityContact>;
+    if (cache?.length) {
+      cache.forEach((cache) => {
+        const contacts = cache.state.data as Array<TypeDataEntityContact>;
+        queryData = [...queryData, ...contacts];
+      });
+    }
+
+    return queryData as TypeDataEntityContact[] | undefined;
+  },
   getPendingContacts: () =>
     queryClient.getQueryData("pendingContacts") as
       | TypeDataEntityContact[]
