@@ -272,7 +272,9 @@ function onSubscribeListener(msg: any) {
 function onConfirmSubscribeListener() {
   console.log("##onConfirmSubscribeListener");
 }
-
+function onMessageListener(userId: any, msg: any) {
+  console.log("received a message", userId, msg);
+}
 /*QB.chat.onReconnectListener = onReconnectListener;
 QB.chat.onDisconnectedListener = onDisconnectedListener;
 QB.chat.onSubscribeListener = onSubscribeListener;
@@ -289,6 +291,7 @@ export function InitQbChatListeners() {
   QB.chat.onSubscribeListener = onSubscribeListener;
   QB.chat.onConfirmSubscribeListener = onConfirmSubscribeListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
+  QB.chat.onMessageListener = onMessageListener;
   /* QB.chat.onReconnectListener = onReconnectListener;
   QB.chat.onDisconnectedListener = onDisconnectedListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
