@@ -1,6 +1,5 @@
 import { useMutation } from "react-query";
 import { queryClient } from "..";
-//import { PromisedQb } from "../../Quickblox";
 import { updateRelationship } from "../../Requests";
 
 type errorTypes = {};
@@ -20,7 +19,6 @@ async function updateRelationshipFn(props: TypeParams) {
       return Promise.reject(e);
     });
 }
-const queryKey = ["contacts", "pending"];
 export const useMutationUpdateRelationship = () => {
   return useMutation<any, errorTypes, TypeParams>(updateRelationshipFn, {
     onSuccess: () => {
