@@ -12,12 +12,13 @@ import { useState } from "react";
 import { PressableText } from "../../Components/ClickableText";
 import { PromisedQb } from "../../Quickblox";
 import { clientData, useMutationUpdateRelationship } from "../../ReactQuery";
+import { devDeleteDialog } from "../../Requests";
 
 const DebugMenu = () => {
   const { mutateAsync: updateRelationshipMutation } =
     useMutationUpdateRelationship();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [removeFriendInput, setRemoveFriendInput] = useState("");
+  const [debugInput, setDebugInput] = useState("");
   function onTryDisconnectChat() {
     PromisedQb.chatDisconnect();
   }
@@ -30,18 +31,33 @@ const DebugMenu = () => {
   }
   function tryRemoveFriend() {
     const contacts = clientData.getContacts();
-    const user = contacts?.filter(
-      (contact) => contact.user.id === parseInt(removeFriendInput, 10)
+    const user = contacts?.find(
+      (contact) => contact.user.id === parseInt(debugInput, 10)
     );
     if (!user) {
-      console.log("no user found");
-      return;
+      return Promise.reject("no user found to remove");
+      // console.log("no user found");
+      //return;
     }
 
     updateRelationshipMutation({
-      relationship_id: user[0].relationship.relationship_id,
+      relationship_id: user.relationship.relationship_id,
       status: 3,
     });
+  }
+  async function tryDevDeleteDialog() {
+    new Promise(async (res, rej) => {
+      try {
+        const response = await devDeleteDialog({
+          relationship_id: parseInt(debugInput, 10),
+        });
+        res(response);
+      } catch (e) {
+        rej(e);
+      }
+    })
+      .then((s) => console.log("dialog deleted!", s))
+      .catch((e) => console.log("dialog delete error", e));
   }
   function handleLogQbSession() {
     console.log("!!@@qbSession", PromisedQb.getSessionUser());
@@ -81,23 +97,27 @@ const DebugMenu = () => {
             <PressableText onClick={onTryDisconnectChat}>
               Disconnect Quickblox Chat
             </PressableText>
-            <Stack direction="row">
+            <Stack direction="column" sx={{ border: 1 }}>
               <TextField
-                value={removeFriendInput}
+                value={debugInput}
                 onChange={(e) => {
-                  setRemoveFriendInput(e.target.value);
+                  setDebugInput(e.target.value);
                 }}
               />
+
               <PressableText onClick={tryRemoveFriend}>
-                Remove Friend
+                Remove Friend (user.id)
+              </PressableText>
+              <PressableText onClick={tryDevDeleteDialog}>
+                Delete Dialog (relationship.id)
               </PressableText>
             </Stack>
             <Divider variant="fullWidth" />
-            <PressableText onClick={handleToggleModal}>
-              Close Menu
-            </PressableText>
             <PressableText onClick={handleLogQbSession}>
               Log QB session
+            </PressableText>
+            <PressableText onClick={handleToggleModal}>
+              Close Menu
             </PressableText>
           </Stack>
         </Paper>
