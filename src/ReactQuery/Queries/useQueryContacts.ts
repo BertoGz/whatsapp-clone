@@ -4,6 +4,7 @@ import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
 import { getMyRelationshipsRequest } from "../../Requests";
 
+const LIMIT = 1000; // fetching limit
 export const useQueryContacts = (
   props: {
     status?: "pending" | "connected";
@@ -51,7 +52,7 @@ export const useQueryContacts = (
 
         const listUserParams = {
           page: 1,
-          per_page: 1000,
+          per_page: LIMIT,
           filter: {
             field: "id",
             param: "in",
@@ -62,7 +63,7 @@ export const useQueryContacts = (
         const contactData = await PromisedQb.listUsers(listUserParams);
         const { items: contactDataItems } = contactData || {};
         const dialogsParams = {
-          limit: 1000,
+          limit: LIMIT,
         };
         const qbDialogs = await PromisedQb.dialogList(dialogsParams);
         const contactsPayload = () => {
@@ -108,7 +109,6 @@ export const useQueryContacts = (
       keepPreviousData: true,
       initialData: () => {
         const contacts = clientData.getContacts();
-        // debugger;
         return contacts?.filter((contact) => {
           switch (props.status) {
             case "pending":
