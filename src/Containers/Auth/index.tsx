@@ -82,7 +82,6 @@ const Auth = () => {
                 }}
               />
             </Box>
-
             <Typography variant="h4">Verify your account</Typography>
           </Box>
           <Stack direction={"column"}>
@@ -121,12 +120,16 @@ const Auth = () => {
   return (
     <Stack
       direction="column"
-      sx={{ height: window.innerHeight / 1, overflow: "clip" }}
+      sx={{
+        width: "100vw",
+        height: "100vh",
+        overflow: "clip",
+      }}
     >
       <Grid direction="row" container sx={{ height: "100%" }}>
         <Grid
           item
-          xs={3}
+          xs={3.5}
           sx={{
             borderWidth: 0,
             borderRightWidth: 2,
@@ -137,7 +140,7 @@ const Auth = () => {
         >
           <Contacts />
         </Grid>
-        <Grid item xs={9} sx={{ height: "100%" }}>
+        <Grid item xs={8.5} sx={{ height: "100%" }}>
           <RightScreenContents />
         </Grid>
       </Grid>
