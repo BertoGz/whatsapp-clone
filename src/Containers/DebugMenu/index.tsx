@@ -42,7 +42,7 @@ const DebugMenu = () => {
 
     updateRelationshipMutation({
       relationship_id: user.relationship.relationship_id,
-      status: 3,
+      status: -1,
     });
   }
   async function tryDevDeleteDialog() {
