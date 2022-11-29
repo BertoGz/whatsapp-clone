@@ -12,7 +12,12 @@ export const useQueryMessages = (
   const query = useQuery<
     any,
     any,
-    { items: Array<TypeDataEntityMessage>; skip: number; limit: number }
+    {
+      items: Array<TypeDataEntityMessage>;
+      skip: number;
+      limit: number;
+      hasMore: boolean;
+    }
   >(
     queryKey,
     async () => {
@@ -21,8 +26,12 @@ export const useQueryMessages = (
         limit: props.limit,
         skip: props.skip,
       });
-
-      return response;
+      // check if response was ok
+      if (response?.limit) {
+        const hasMore = response?.items.length === props.limit;
+        return { ...response, hasMore };
+      }
+      return {};
     },
     { enabled: chatConnected && props.dialogId !== "" && !!props.dialogId }
   );
