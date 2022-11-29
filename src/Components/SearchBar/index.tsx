@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ButtonBase, OutlinedInput, Popover } from "@mui/material";
+import { ButtonBase, OutlinedInput, Popover, Tooltip } from "@mui/material";
 import { Stack } from "@mui/system";
 import {
   Notifications,
@@ -43,7 +43,7 @@ const SearchBar = () => {
       <ButtonBase sx={{ alignSelf: "flex-start" }}>
         <Settings
           sx={{
-            color: colorHelper.lightenColor('secondaryMain', 0.6),
+            color: colorHelper.lightenColor("secondaryMain", 0.6),
           }}
         />
       </ButtonBase>
@@ -69,28 +69,26 @@ const SearchBar = () => {
         />
 
         <Stack direction="row" spacing={1}>
-          <ButtonBase onClick={handleToggleAddContactModal}>
-            <PersonAdd
-              fontSize="large"
-              sx={{
-                color: colorHelper.lightenColor(
-                  'secondaryMain',
-                  0.6
-                ),
-              }}
-            />
-          </ButtonBase>
-          <ButtonBase onClick={handleToggleRequestsModal}>
-            <Notifications
-              fontSize="large"
-              sx={{
-                color: colorHelper.lightenColor(
-                  'secondaryMain',
-                  0.6
-                ),
-              }}
-            />
-          </ButtonBase>
+          <Tooltip title="Add Contact">
+            <ButtonBase onClick={handleToggleAddContactModal}>
+              <PersonAdd
+                fontSize="large"
+                sx={{
+                  color: colorHelper.lightenColor("secondaryMain", 0.6),
+                }}
+              />
+            </ButtonBase>
+          </Tooltip>
+          <Tooltip title="Notifications">
+            <ButtonBase onClick={handleToggleRequestsModal}>
+              <Notifications
+                fontSize="large"
+                sx={{
+                  color: colorHelper.lightenColor("secondaryMain", 0.6),
+                }}
+              />
+            </ButtonBase>
+          </Tooltip>
         </Stack>
         <Popover
           open={Boolean(anchorEl)}
