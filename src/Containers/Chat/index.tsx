@@ -77,11 +77,13 @@ const VideoMessage = () => {
     />
   );
 };
-const LoadMoreSection = () => {
-  const [showLoadMore, setShowLoadMore] = useState(true);
-
+const LoadMoreSection = (props: { showLoadMore: boolean }) => {
   return (
-    <>{showLoadMore && <PressableText>Load Previous Messages</PressableText>}</>
+    <>
+      {props.showLoadMore && (
+        <PressableText>Load Previous Messages</PressableText>
+      )}
+    </>
   );
 };
 const InputSection = ({ dialogId, opponentId }) => {
@@ -151,7 +153,7 @@ const Chat = () => {
     dialogId: _id,
     limit: 50,
   });
-  const { items: messages } = messagesResponse || {};
+  const { items: messages, hasMore } = messagesResponse || {};
   // console.log("!!@@messages", messagesResponse);
   const messageListRef = useRef();
   const MessageList = useMemo(() => {
@@ -250,11 +252,10 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            zIndex: -9,
             backgroundColor: theme.palette.secondary.dark,
           }}
         >
-          <LoadMoreSection />
+          <LoadMoreSection showLoadMore={hasMore} />
           <Stack
             sx={{ width: "100%" }}
             alignSelf={"center"}
@@ -265,6 +266,7 @@ const Chat = () => {
           </Stack>
           <div
             style={{
+              pointerEvents:'none',
               position: "absolute",
               top: 0,
               right: 0,
@@ -277,8 +279,7 @@ const Chat = () => {
               backgroundRepeat: "repeat",
               backgroundBlendMode: "multiply",
               backgroundColor: theme.palette.secondary.dark,
-              zIndex: -10,
-              opacity:.2
+              opacity: 0,
             }}
           />
         </div>
