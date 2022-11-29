@@ -8,7 +8,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { ArrowForwardIos } from "@mui/icons-material";
 import { useAppSelector } from "../../Redux/useAppSelector";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
