@@ -173,14 +173,16 @@ export const PromisedQb = {
       limit,
       skip,
     };
-    return new Promise((res, rej) => {
-      return QB.chat.message.list(params, (error, messages) => {
-        if (error) {
-          rej(error);
-        }
-        res(messages);
-      });
-    });
+    return new Promise<{ limit: number; skip: number; items: Array<any> }>(
+      (res, rej) => {
+        return QB.chat.message.list(params, (error, messages) => {
+          if (error) {
+            rej(error);
+          }
+          res(messages);
+        });
+      }
+    );
   },
   sendMessage: async ({ dialogId = "", opponentId = 0, message }) => {
     const messageProps = {
