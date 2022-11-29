@@ -6,8 +6,10 @@ import Auth from "./Containers/Auth";
 import { useFirebaseAutoLogin } from "./Hooks/useFirebaseAutoLogin";
 import { useQbChat } from "./Quickblox/useQbChat";
 import DebugMenu from "./Containers/DebugMenu";
+import { useLoggoutEffect } from "./Hooks/useLogoutEffect";
 const Hooks = () => {
   useFirebaseAutoLogin();
+  useLoggoutEffect();
   useQbSession();
   useQbChat();
   return <></>;
@@ -20,7 +22,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/user" element={<Auth />} />
         </Routes>
-        {false && <DebugMenu />}
+        {true && <DebugMenu />}
         <Hooks />
       </BrowserRouter>
     </div>
