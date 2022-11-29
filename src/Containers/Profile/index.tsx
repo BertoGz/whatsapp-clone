@@ -144,7 +144,7 @@ const Profile = () => {
     return <></>;
   }
 
-  const { full_name, email, phone } = contact?.user || {};
+  const { full_name, email, phone } = contact[0]?.user || {};
   return (
     <Stack direction="column" divider={<Divider />} flex={1}>
       <Stack alignItems={"center"}>
