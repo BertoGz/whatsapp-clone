@@ -204,13 +204,12 @@ const Chat = () => {
         <Stack
           direction="row"
           sx={{
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.secondary.main,
             alignItems: "center",
             borderWidth: 0,
-            borderBottomWidth: "2px",
             borderStyle: "solid",
-            borderBottomColor: theme.palette.secondary.main,
             zIndex: 1,
+            height: "60px",
           }}
           justifyContent="space-between"
         >
@@ -252,7 +251,7 @@ const Chat = () => {
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            backgroundColor: theme.palette.secondary.dark,
+            backgroundColor: colorHelper.darkenColor("secondaryDark", 0.2),
           }}
         >
           <LoadMoreSection showLoadMore={hasMore} />
@@ -266,7 +265,7 @@ const Chat = () => {
           </Stack>
           <div
             style={{
-              pointerEvents:'none',
+              pointerEvents: "none",
               position: "absolute",
               top: 0,
               right: 0,
