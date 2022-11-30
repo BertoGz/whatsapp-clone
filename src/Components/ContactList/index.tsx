@@ -1,10 +1,9 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useMemo } from "react";
-
-//import { users } from "../../Data";
 import { setSelectedProfile } from "../../Redux/AppState";
 import { useAppDispatch } from "../../Redux/useAppDispatch";
+import { colorHelper } from "../../Theme";
 import ContactListItem from "../ContactListItem";
 
 const ContactList = ({
@@ -22,24 +21,36 @@ const ContactList = ({
     return data; // return data.filter((user) => user?.friend.subscription !== "none");
   }, [data]);
 
-  if (subscribedUsers?.length === 0) {
+  if (loading) {
     return (
       <>
         <Box
-          flexGrow={1}
           display="flex"
           justifyContent={"center"}
           alignItems="center"
+          height="100%"
         >
-          {loading ? (
-            <CircularProgress sx={{mt:2}}/>
-          ) : (
-            <Typography variant="h5" color="white" textAlign={"center"}>
-              Connected users will appear here.
-            </Typography>
-          )}
+          <CircularProgress sx={{ mt: 2 }} />
         </Box>
       </>
+    );
+  }
+  if (subscribedUsers.length === 0) {
+    return (
+      <Box
+        display="flex"
+        justifyContent={"center"}
+        alignItems="center"
+        height="100%"
+      >
+        <Typography
+          variant="h6"
+          sx={{ color: colorHelper.lightenColor("secondaryLight", 0.4) }}
+          textAlign={"center"}
+        >
+          This is your contact list. Connected users will be found here.
+        </Typography>
+      </Box>
     );
   }
   return (
