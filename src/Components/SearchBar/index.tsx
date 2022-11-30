@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { ButtonBase, OutlinedInput, Popover, Tooltip } from "@mui/material";
+import {
+  Box,
+  ButtonBase,
+  OutlinedInput,
+  Popover,
+  Tooltip,
+} from "@mui/material";
 import { Stack } from "@mui/system";
 import {
+  FilterList,
   Notifications,
   PersonAdd,
   Search,
@@ -9,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import { RequestsModal } from "../../Containers/RequestsModal";
 import { AddContactModal } from "../../Containers/AddContactModal";
-import { colorHelper } from "../../Theme";
+import { colorHelper, theme } from "../../Theme";
 
 let modalOpen = "";
 const SearchBar = () => {
@@ -40,36 +47,26 @@ const SearchBar = () => {
   }
   return (
     <>
-      <ButtonBase sx={{ alignSelf: "flex-start" }}>
-        <Settings
-          sx={{
-            color: colorHelper.lightenColor("secondaryMain", 0.6),
-          }}
-        />
-      </ButtonBase>
       <Stack
-        direction="column"
-        alignItems="flex-end"
-        spacing={2}
-        sx={{ paddingX: 2, pt: 2 }}
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          backgroundColor: theme.palette.secondary.main,
+          height: "60px",
+        }}
       >
-        <OutlinedInput
-          color="secondary"
-          fullWidth
-          style={{
-            height: 40,
-            borderRadius: 10,
-          }}
-          value={input}
-          onChange={(e) => {
-            const updateVal = e.target.value;
-            setInput(updateVal);
-          }}
-          startAdornment={<Search color="primary" />}
-        />
-
-        <Stack direction="row" spacing={1}>
-          <Tooltip title="Add Contact">
+        <Box>
+          <ButtonBase sx={{ p: 1 }}>
+            <Settings
+              sx={{
+                color: colorHelper.lightenColor("secondaryMain", 0.6),
+              }}
+            />
+          </ButtonBase>
+        </Box>
+        <Box>
+          <Tooltip title="Add new contact">
             <ButtonBase onClick={handleToggleAddContactModal}>
               <PersonAdd
                 fontSize="large"
@@ -89,22 +86,58 @@ const SearchBar = () => {
               />
             </ButtonBase>
           </Tooltip>
-        </Stack>
-        <Popover
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={() => {
-            setAnchorEl(null);
-          }}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-        >
-          {modalOpen === "requests" && <RequestsModal />}
-          {modalOpen === "addContact" && <AddContactModal />}
-        </Popover>
+        </Box>
       </Stack>
+      <Stack
+        direction="row"
+        p="4px"
+        sx={{ backgroundColor: theme.palette.secondary.dark }}
+      >
+        <OutlinedInput
+          color="secondary"
+          fullWidth
+          style={{
+            marginLeft: 10,
+            height: 40,
+            borderRadius: 10,
+            backgroundColor: colorHelper.lightenColor("secondaryLight", 0.4),
+          }}
+          value={input}
+          onChange={(e) => {
+            const updateVal = e.target.value;
+            setInput(updateVal);
+          }}
+          startAdornment={
+            <Search
+              sx={{ color: colorHelper.darkenColor("secondaryLight", 0.4) }}
+            />
+          }
+        />
+        <Tooltip title="filter">
+          <ButtonBase
+            sx={{
+              px: 1,
+              color: colorHelper.lightenColor("secondaryLight", 0.4),
+            }}
+          >
+            <FilterList />
+          </ButtonBase>
+        </Tooltip>
+      </Stack>
+      <Popover
+        open={Boolean(anchorEl)}
+        anchorEl={anchorEl}
+        onClose={() => {
+          setAnchorEl(null);
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+      >
+        {modalOpen === "requests" && <RequestsModal />}
+        {modalOpen === "addContact" && <AddContactModal />}
+      </Popover>
     </>
   );
 };
