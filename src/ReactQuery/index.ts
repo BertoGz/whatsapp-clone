@@ -23,15 +23,17 @@ export const clientData = {
   getContacts: () => {
     const cache = queryClient.getQueryCache().findAll("contacts");
 
-    let queryData = [] as Array<TypeDataEntityContact>;
+    let queryData = [] as Array<TypeDataEntityContact | undefined>;
     if (cache?.length) {
       cache.forEach((cache) => {
         const contacts = cache.state.data as Array<TypeDataEntityContact>;
         queryData = [...queryData, ...contacts];
       });
+    } else {
+      return undefined;
     }
-
-    return queryData as TypeDataEntityContact[] | undefined;
+    
+    return queryData;
   },
   getPendingContacts: () =>
     queryClient.getQueryData("pendingContacts") as
