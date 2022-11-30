@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material";
-import { darken, lighten } from "@mui/material";
+import { darken, lighten, } from "@mui/material";
 export const theme = createTheme({
   palette: {
     primary: {
@@ -11,7 +11,7 @@ export const theme = createTheme({
     secondary: {
       main: "#2c3f44",
       light: "#566a6f",
-      dark: "#17343c",
+      dark: "#1f2a33",
       contrastText: "rgba(0,0,0,.5)",
     },
   },
