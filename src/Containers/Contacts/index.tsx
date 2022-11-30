@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Contacts = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const { data: contacts, isLoading,isIdle } = useQueryContacts();
+  const { data: contacts, isLoading, isIdle } = useQueryContacts();
 
   const { mutateAsync: signOutMutation } = useMutationLogout();
   return (
@@ -19,26 +19,24 @@ const Contacts = () => {
         height: "100%",
         justifyContent: "space-between",
         backgroundColor: theme.palette.secondary.light,
+        borderRight: 2,
+        borderColor: theme.palette.divider,
       }}
     >
       <div>
-        <Stack
-          direction="column"
-          sx={{
-            p: 1,
-            borderBottom: 1,
-            borderBottomColor: theme.palette.divider,
-          }}
-        >
-          <SearchBar />
-        </Stack>
-        {<ContactList data={contacts ?? []} {...{ loading: isLoading || isIdle }} />}
+        <SearchBar />
+
+        {
+          <ContactList
+            data={contacts ?? []}
+            {...{ loading: isLoading || isIdle }}
+          />
+        }
       </div>
 
       <Button
         variant="contained"
         color="secondary"
-  
         onClick={() => {
           signOutMutation(null, {
             onSuccess: () => {
@@ -46,7 +44,10 @@ const Contacts = () => {
             },
           });
         }}
-        sx={{ m: 2,color:theme.palette.getContrastText(theme.palette.secondary.dark) }}
+        sx={{
+          m: 2,
+          color: theme.palette.getContrastText(theme.palette.secondary.dark),
+        }}
       >
         Logout
       </Button>
