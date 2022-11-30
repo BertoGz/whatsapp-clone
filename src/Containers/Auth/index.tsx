@@ -132,8 +132,8 @@ const Auth = () => {
           xs={3.5}
           sx={{
             borderWidth: 0,
-            borderRightWidth: 2,
-            borderRightColor: theme.palette.secondary.main,
+            borderRightWidth: .5,
+            borderRightColor: theme.palette.secondary.light,
             borderStyle: "solid",
             height: "100%",
           }}
