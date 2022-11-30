@@ -32,7 +32,7 @@ const DebugMenu = () => {
   function tryRemoveFriend() {
     const contacts = clientData.getContacts();
     const user = contacts?.find(
-      (contact) => contact.user.id === parseInt(debugInput, 10)
+      (contact) => contact?.user.id === parseInt(debugInput, 10)
     );
     if (!user) {
       return Promise.reject("no user found to remove");
