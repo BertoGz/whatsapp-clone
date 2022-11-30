@@ -154,7 +154,9 @@ const ContactListItem = ({
                 }}
               >
                 <Typography lineHeight={1}>9:33 AM</Typography>
-                <ArrowForwardIos color="secondary" sx={{ fontSize: "10px" }} />
+                <ArrowForwardIos
+                  sx={{ fontSize: "10px", color: contrastText }}
+                />
               </Stack>
             </Stack>
             <Typography
