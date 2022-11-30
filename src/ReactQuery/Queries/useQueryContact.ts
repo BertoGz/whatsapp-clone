@@ -21,7 +21,9 @@ export const useQueryContact = (id: number) => {
       keepPreviousData: true,
       initialData: () => {
         const contacts = clientData.getContacts();
-
+        if (!contacts?.length) {
+          return;
+        }
         const contact = contacts?.find((contact) => contact?.user?.id === id);
         return [contact];
       },

@@ -107,8 +107,12 @@ export const useQueryContacts = (
     {
       enabled: chatConnected,
       keepPreviousData: true,
+      staleTime: 60000,
       initialData: () => {
         const contacts = clientData.getContacts();
+        if (!contacts?.length) {
+          return;
+        }
         return contacts?.filter((contact) => {
           switch (props.status) {
             case "pending":
