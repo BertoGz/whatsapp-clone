@@ -1,39 +1,54 @@
-import { useQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
+import { queryClient } from "..";
 import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
 
-export const useQueryMessages = (
-  props = { dialogId: "", limit: 100, skip: 0 }
-) => {
+type queryType = {
+  items: Array<TypeDataEntityMessage | undefined>;
+  limit: number;
+  hasMore: boolean;
+};
+export const useQueryMessages = (props = { dialogId: "", limit: 100 }) => {
   const chatConnected = useAppSelector(
     (state) => state.Quickblox.chatConnected
   );
   const queryKey = ["messages", props.dialogId];
-  const query = useQuery<
-    any,
-    any,
-    {
-      items: Array<TypeDataEntityMessage>;
-      skip: number;
-      limit: number;
-      hasMore: boolean;
-    }
-  >(
+  const query = useInfiniteQuery<any, any, queryType | undefined>(
     queryKey,
-    async () => {
+    async ({ pageParam: skip = 0 }) => {
+      console.log("skip", skip);
       const response = await PromisedQb.messagesList({
         dialogId: props.dialogId,
         limit: props.limit,
-        skip: props.skip,
+        skip,
       });
       // check if response was ok
       if (response?.limit) {
-        const hasMore = response?.items.length === props.limit;
-        return { ...response, hasMore };
+        return response;
       }
-      return {};
     },
-    { enabled: chatConnected && props.dialogId !== "" && !!props.dialogId }
+    {
+      enabled: chatConnected && props.dialogId !== "" && !!props.dialogId,
+      getNextPageParam: (lastResponse) => {
+        // check if more pages exist
+        // returning undefined will set the hasNextPage param to false
+        const hasMore = lastResponse?.items.length >= props.limit;
+        console.log("hasMore", hasMore);
+        if (!hasMore) {
+          return;
+        }
+        // this will return the skip amount to fetch more messages
+        const totalMessageQuery = queryClient.getQueryData(queryKey) as any;
+        const { pages }: { pages: Array<queryType> } = totalMessageQuery || {};
+        if (pages) {
+          const length = pages.reduce(
+            (acc, page) => acc + page.items.length,
+            0
+          );
+          return length;
+        }
+      },
+    }
   );
   return query;
 };
