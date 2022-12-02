@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as QB from "quickblox/quickblox";
+import { queryClient } from "../ReactQuery";
 import { setChatConnected } from "../Redux/Quickblox";
 import { store } from "../Redux/store";
 let userSession = null as TypeDataEntityQbUserSession | null;
@@ -274,8 +275,41 @@ function onSubscribeListener(msg: any) {
 function onConfirmSubscribeListener() {
   console.log("##onConfirmSubscribeListener");
 }
-function onMessageListener(userId: any, msg: any) {
+function onMessageListener(
+  userId: any,
+  msg: { body: string; dialog_id: string }
+) {
   console.log("received a message", userId, msg);
+  const { dialog_id } = msg || {};
+  if (!dialog_id) {
+    return;
+  }
+  const formatMessage = {
+    _id: msg.id,
+    all_read: false,
+    attachments: [],
+    chat_dialog_id: msg.dialog_id,
+    created_at: msg.extension.date_sent,
+    date_sent: msg.extension.date_sent,
+    delivered_ids: [],
+    message: msg.body,
+    read_ids: [],
+    recipient_id: msg.recipient_id,
+    sender_id: userId,
+    updated_at: msg.extension.date_sent,
+    read: 0,
+  };
+
+  const key = ["messages", dialog_id];
+  const messagesQuery = queryClient.getQueryData(key);
+  console.log("!!@@heree", key, messagesQuery);
+  if (!messagesQuery?.limit) {
+    return;
+  }
+  const newMessages = [formatMessage, ...messagesQuery.items];
+  queryClient.setQueryData(key, { ...messagesQuery, items: newMessages });
+  const updates = queryClient.getQueryData(key);
+  debugger;
 }
 /*QB.chat.onReconnectListener = onReconnectListener;
 QB.chat.onDisconnectedListener = onDisconnectedListener;
