@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Contacts = () => {
   const navigate = useNavigate();
   const theme = useTheme();
-  const { data: contacts, isLoading, isIdle } = useQueryContacts();
+  const { data: contacts, isLoading } = useQueryContacts();
 
   const { mutateAsync: signOutMutation } = useMutationLogout();
   return (
@@ -26,12 +26,7 @@ const Contacts = () => {
       <div>
         <SearchBar />
 
-        {
-          <ContactList
-            data={contacts ?? []}
-            {...{ loading: isLoading || isIdle }}
-          />
-        }
+        {<ContactList data={contacts ?? []} {...{ loading: isLoading || contacts === undefined }} />}
       </div>
 
       <Button
