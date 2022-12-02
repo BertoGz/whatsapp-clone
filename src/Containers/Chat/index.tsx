@@ -77,11 +77,13 @@ const VideoMessage = () => {
     />
   );
 };
-const LoadMoreSection = (props: { showLoadMore: boolean }) => {
+const LoadMoreSection = (props: { showLoadMore: boolean; onLoadMore: any }) => {
   return (
     <>
       {props.showLoadMore && (
-        <PressableText>Load Previous Messages</PressableText>
+        <PressableText onClick={props.onLoadMore}>
+          Load Previous Messages
+        </PressableText>
       )}
     </>
   );
@@ -144,23 +146,30 @@ const Chat = () => {
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );
-  const { data: contact } = useQueryContact(selectedProfile);
+  const { data: contact, isSuccess } = useQueryContact(selectedProfile);
   const { dialog, user } = contact[0] || {};
   const { _id } = dialog || {};
   const { id: opponent_id } = user || {};
-  //const correctDialog = dialogs?.items.find(dialog=>dialog)
-  const { data: messagesResponse } = useQueryMessages({
+
+  const {
+    data: messagesResponse,
+    fetchNextPage,
+    hasNextPage,
+  } = useQueryMessages({
     dialogId: _id,
-    limit: 50,
+    limit: 10,
   });
-  const { items: messages, hasMore } = messagesResponse || {};
+  // const { items: messages } = messagesResponse || {};
   // console.log("!!@@messages", messagesResponse);
   const messageListRef = useRef();
   const MessageList = useMemo(() => {
-    if (!messages?.length) {
+    const stackedMessages = messagesResponse?.pages.reduce((acc, page) => {
+      return [...acc, ...page.items];
+    }, []);
+    if (!stackedMessages?.length) {
       return undefined;
     }
-    const messagesCopy = [...messages];
+    const messagesCopy = [...stackedMessages];
     return messagesCopy?.reverse()?.map((message) => {
       const { attachments, sender_id } = message || {};
       let messageType: "photo" | "text" = "text";
@@ -176,7 +185,7 @@ const Chat = () => {
           return <PhotoMessage {...{ message, extraProps }} />;
       }
     });
-  }, [messages]);
+  }, [messagesResponse]);
 
   const scrollToBottom = () => {
     messageListRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -191,7 +200,7 @@ const Chat = () => {
   console.log("messageref", messageListRef);
   useEffect(() => {
     scrollToBottom();
-  }, [messages?.length]);
+  }, [isSuccess]);
   return (
     <>
       <Stack
@@ -241,7 +250,7 @@ const Chat = () => {
         </Stack>
         <div
           id="scrollContainer"
-          key={messages?.length}
+          key={MessageList?.length}
           ref={messageListRef}
           style={{
             overflow: "scroll",
@@ -254,7 +263,10 @@ const Chat = () => {
             backgroundColor: colorHelper.darkenColor("secondaryDark", 0.2),
           }}
         >
-          <LoadMoreSection showLoadMore={hasMore} />
+          <LoadMoreSection
+            showLoadMore={hasNextPage}
+            onLoadMore={fetchNextPage}
+          />
           <Stack
             sx={{ width: "100%" }}
             alignSelf={"center"}
