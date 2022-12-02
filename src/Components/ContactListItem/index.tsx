@@ -115,7 +115,7 @@ const ContactListItem = ({
         direction="row"
         alignItems="center"
         width="100%"
-        height="60px"
+        minHeight="60px"
         overflow={"hidden"}
       >
         <Avatar
