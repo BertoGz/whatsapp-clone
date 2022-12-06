@@ -1,10 +1,11 @@
 // @ts-nocheck
-import { MessageBox, Input } from "react-chat-elements";
+import { MessageBox } from "react-chat-elements";
 
 import {
   Avatar,
   Box,
   Button,
+  CircularProgress,
   Stack,
   TextField,
   Typography,
@@ -141,35 +142,36 @@ const InputSection = ({ dialogId, opponentId }) => {
     </Box>
   );
 };
+
 const Chat = () => {
   const theme = useTheme();
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );
+
   const { data: contact, isSuccess } = useQueryContact(selectedProfile);
-  const { dialog, user } = contact[0] || {};
+  console.log("selectedProfile", selectedProfile, contact);
+  const { dialog, user } = contact?.[0] || {};
   const { _id } = dialog || {};
   const { id: opponent_id } = user || {};
 
   const {
     data: messagesResponse,
-    fetchNextPage,
-    hasNextPage,
+    isLoading,
+    getPrevMessages,
   } = useQueryMessages({
     dialogId: _id,
     limit: 10,
   });
+  const { hasMore } = messagesResponse || {};
   // const { items: messages } = messagesResponse || {};
   // console.log("!!@@messages", messagesResponse);
   const messageListRef = useRef();
   const MessageList = useMemo(() => {
-    const stackedMessages = messagesResponse?.pages.reduce((acc, page) => {
-      return [...acc, ...page.items];
-    }, []);
-    if (!stackedMessages?.length) {
+    if (!messagesResponse?.items?.length) {
       return undefined;
     }
-    const messagesCopy = [...stackedMessages];
+    const messagesCopy = [...messagesResponse.items];
     return messagesCopy?.reverse()?.map((message) => {
       const { attachments, sender_id } = message || {};
       let messageType: "photo" | "text" = "text";
@@ -201,6 +203,10 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [isSuccess]);
+  function onLoadMore() {
+    getPrevMessages();
+    // refetch();
+  }
   return (
     <>
       <Stack
@@ -263,18 +269,19 @@ const Chat = () => {
             backgroundColor: colorHelper.darkenColor("secondaryDark", 0.2),
           }}
         >
-          <LoadMoreSection
-            showLoadMore={hasNextPage}
-            onLoadMore={fetchNextPage}
-          />
-          <Stack
-            sx={{ width: "100%" }}
-            alignSelf={"center"}
-            direction="column"
-            maxWidth={"800px"}
-          >
-            {MessageList}
-          </Stack>
+          <LoadMoreSection showLoadMore={hasMore} onLoadMore={onLoadMore} />
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <Stack
+              sx={{ width: "100%" }}
+              alignSelf={"center"}
+              direction="column"
+              maxWidth={"800px"}
+            >
+              {MessageList}
+            </Stack>
+          )}
           <div
             style={{
               pointerEvents: "none",
