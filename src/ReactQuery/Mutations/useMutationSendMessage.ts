@@ -23,6 +23,7 @@ export const useMutationSendMessage = ({
     onSuccess: () => {
       queryClient.invalidateQueries(["messages", dialogId]);
       queryClient.refetchQueries({ queryKey: ["contacts", dialogId] });
+      queryClient.refetchQueries(["messages", dialogId]);
     },
   });
 };
