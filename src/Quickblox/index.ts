@@ -306,10 +306,9 @@ function onMessageListener(
   if (!messagesQuery?.limit) {
     return;
   }
-  const newMessages = [formatMessage, ...messagesQuery.items];
-  queryClient.setQueryData(key, { ...messagesQuery, items: newMessages });
-  const updates = queryClient.getQueryData(key);
-  debugger;
+  queryClient.refetchQueries(key);
+  //const newMessages = [formatMessage, ...messagesQuery.items];
+  //queryClient.setQueryData(key, { ...messagesQuery, items: newMessages });
 }
 /*QB.chat.onReconnectListener = onReconnectListener;
 QB.chat.onDisconnectedListener = onDisconnectedListener;
