@@ -22,7 +22,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/user" element={<Auth />} />
         </Routes>
-        {true && <DebugMenu />}
+        {false && <DebugMenu />}
         <Hooks />
       </BrowserRouter>
     </div>
