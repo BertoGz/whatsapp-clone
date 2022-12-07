@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   FormLabel,
   Grid,
   Typography,
@@ -61,6 +62,9 @@ const Auth = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { data: userData } = useQueryFirebaseUserData();
+  const userSessionValid = useAppSelector(
+    (state) => state.Quickblox.userSessionValid
+  );
   const { mutateAsync: signOutMutation } = useMutationLogout();
   const { emailVerified, email } = userData || {};
   console.log("!!!userData", userData);
@@ -118,33 +122,42 @@ const Auth = () => {
     );
   }
   return (
-    <Stack
-      direction="column"
-      sx={{
-        width: "100vw",
-        height: "100vh",
-        overflow: "clip",
-      }}
-    >
-      <Grid direction="row" container sx={{ height: "100%" }}>
-        <Grid
-          item
-          xs={3.5}
+    <>
+      {userSessionValid ? (
+        <Stack
+          direction="column"
           sx={{
-            borderWidth: 0,
-            borderRightWidth: .5,
-            borderRightColor: theme.palette.secondary.light,
-            borderStyle: "solid",
-            height: "100%",
+            width: "100vw",
+            height: "100vh",
+            overflow: "clip",
           }}
         >
-          <Contacts />
-        </Grid>
-        <Grid item xs={8.5} sx={{ height: "100%" }}>
-          <RightScreenContents />
-        </Grid>
-      </Grid>
-    </Stack>
+          <Grid direction="row" container sx={{ height: "100%" }}>
+            <Grid
+              item
+              xs={3.5}
+              sx={{
+                borderWidth: 0,
+                borderRightWidth: 0.5,
+                borderRightColor: theme.palette.secondary.light,
+                borderStyle: "solid",
+                height: "100%",
+              }}
+            >
+              <Contacts />
+            </Grid>
+            <Grid item xs={8.5} sx={{ height: "100%" }}>
+              <RightScreenContents />
+            </Grid>
+          </Grid>
+        </Stack>
+      ) : (
+        <>
+          <Typography>Please wait while we prepare your data</Typography>{" "}
+          <CircularProgress />
+        </>
+      )}
+    </>
   );
 };
 export default Auth;
