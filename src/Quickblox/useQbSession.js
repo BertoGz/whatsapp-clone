@@ -2,6 +2,7 @@ import * as QB from "quickblox/quickblox";
 import { useEffect } from "react";
 import { PromisedQb } from ".";
 import { useQueryFirebaseUserData } from "../ReactQuery";
+import { useMutationLogout } from "../ReactQuery/Mutations/useMutationLogout";
 import {
   setAppSessionInvalid,
   setAppSessionValid,
@@ -21,8 +22,9 @@ export const useQbSession = () => {
   const { data: userData } = useQueryFirebaseUserData();
 
   const { email, uid } = userData || {};
-  const { qbInitialized, appSessionValid, userSessionValid } =
-    useAppSelector((state) => state.Quickblox);
+  const { qbInitialized, appSessionValid, userSessionValid } = useAppSelector(
+    (state) => state.Quickblox
+  );
   const dispatch = useAppDispatch();
   async function tryQbInit() {
     await QB.init(APPLICATION_ID, AUTH_KEY, AUTH_SECRET, ACCOUNT_KEY, CONFIG);
@@ -68,6 +70,8 @@ export const useQbSession = () => {
           if (code === 401) {
             //  debugger;
             userExists = false;
+          } else if (code === 403) {
+            dispatch(setUserSessionInValid());
           } else {
             // debugger;
             dispatch(setUserSessionInValid());
