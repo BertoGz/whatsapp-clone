@@ -32,13 +32,14 @@ const TextMessage = ({
   message: TypeDataEntityMessage;
   extraProps: { isSender: boolean };
 }) => {
-  const { message: text } = message || {};
+  const { message: text, created_at } = message || {};
   const { isSender } = extraProps || {};
   return (
     <MessageBox
       position={isSender ? "right" : "left"}
       type={"text"}
       text={text}
+      date={created_at}
     />
   );
 };
