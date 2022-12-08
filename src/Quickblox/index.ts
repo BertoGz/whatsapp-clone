@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as QB from "quickblox/quickblox";
 import { queryClient } from "../ReactQuery";
-import { setChatConnected } from "../Redux/Quickblox";
+import { setChatConnected, setUserIsTyping } from "../Redux/Quickblox";
 import { store } from "../Redux/store";
 let userSession = null as TypeDataEntityQbUserSession | null;
 export const PromisedQb = {
@@ -208,6 +208,23 @@ export const PromisedQb = {
       }
     });
   },
+  sendIsTyping: async (status: boolean, opponentId: number) => {
+    // let funcToUse;
+
+    return new Promise((res, rej) => {
+      try {
+        if (status) {
+          const response = QB.chat.sendIsTypingStatus(opponentId);
+          res(response);
+        } else {
+          const response = QB.chat.sendIsStopTypingStatus(opponentId);
+          res(response);
+        }
+      } catch (e) {
+        rej(e);
+      }
+    });
+  },
 };
 export const QbHelpers = {
   //getUserJid: () => QB.chat.helpers.getUserJid(user.id, 24325),
@@ -310,6 +327,11 @@ function onMessageListener(
   //const newMessages = [formatMessage, ...messagesQuery.items];
   //queryClient.setQueryData(key, { ...messagesQuery, items: newMessages });
 }
+function onMessageTypingListener(isTyping, userId) {
+  const { dispatch } = store;
+  dispatch(setUserIsTyping({ isTyping, userId }));
+}
+
 /*QB.chat.onReconnectListener = onReconnectListener;
 QB.chat.onDisconnectedListener = onDisconnectedListener;
 QB.chat.onSubscribeListener = onSubscribeListener;
@@ -327,6 +349,7 @@ export function InitQbChatListeners() {
   QB.chat.onConfirmSubscribeListener = onConfirmSubscribeListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
   QB.chat.onMessageListener = onMessageListener;
+  QB.chat.onMessageTypingListener = onMessageTypingListener;
   /* QB.chat.onReconnectListener = onReconnectListener;
   QB.chat.onDisconnectedListener = onDisconnectedListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
