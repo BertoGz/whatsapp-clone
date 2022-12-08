@@ -9,6 +9,7 @@ const initialState = {
   webRtcConnected: false,
   chatListenersInit: false,
   qbSession: {},
+  userIsTyping: JSON.stringify(new Map()),
 } as {
   qbInitialized: boolean | null;
   appSessionValid: boolean | null;
@@ -18,6 +19,7 @@ const initialState = {
   webRtcConnected: boolean;
   chatListenersInit: boolean;
   qbSession: any;
+  userIsTyping: any;
 };
 const Quickblox = createSlice({
   name: "quickblox",
@@ -54,17 +56,28 @@ const Quickblox = createSlice({
       state.chatListenersInit = true;
     },
     setQbSession: (state, action) => {
-      state.qbSession = action.payload
+      state.qbSession = action.payload;
+    },
+    setUserIsTyping: (state, action) => {
+      // debugger;
+      const { userId, isTyping } = action.payload || {};
+      debugger;
+      const parsed = JSON.parse(state.userIsTyping);
+      debugger;
+      parsed[userId] = isTyping;
+      const stringed = JSON.stringify(parsed);
+      debugger;
+      state.userIsTyping = stringed;
     },
     resetState: (state) => {
-      state.qbInitialized = initialState.qbInitialized
+      state.qbInitialized = initialState.qbInitialized;
       state.chatConnected = initialState.chatConnected;
       state.userSessionValid = initialState.userSessionValid;
-      state.appSessionValid = initialState.appSessionValid
+      state.appSessionValid = initialState.appSessionValid;
       state.qbServiceFailure = initialState.qbServiceFailure;
-      state.chatListenersInit = initialState.chatListenersInit
+      state.chatListenersInit = initialState.chatListenersInit;
       state.webRtcConnected = initialState.webRtcConnected;
-    //  debugger
+      //  debugger
     },
   },
 });
@@ -80,6 +93,7 @@ export const {
   setWebRtcConnected,
   setChatListenersInit,
   setQbSession,
+  setUserIsTyping,
   resetState,
 } = Quickblox.actions;
 export default Quickblox.reducer;
