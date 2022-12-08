@@ -21,7 +21,7 @@ import { AppLogo } from "../../Components/AppLogo";
 
 const WelcomeElements = () => {
   return (
-    <Stack flex={1} height="100%" justifyContent="center" bgcolor={'white'}>
+    <Stack flex={1} height="100%" justifyContent="center" bgcolor={"white"}>
       <Typography variant="h4">Welcome To Whatsapp-clone!</Typography>
       <Typography variant="h5" color="GrayText">
         Select a contact to begin chatting
@@ -147,14 +147,16 @@ const Auth = () => {
       ) : (
         <Stack
           sx={{
-            height: window.outerHeight/3,
+            height: window.outerHeight / 3,
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Typography>Please wait while we prepare your data</Typography>
-          <AppLogo width={'400px'} />
+          <AppLogo width={"400px"} />
           <CircularProgress />
+          <Typography color="white" fontSize="18px">
+            Please wait while we prepare your data
+          </Typography>
         </Stack>
       )}
     </>
