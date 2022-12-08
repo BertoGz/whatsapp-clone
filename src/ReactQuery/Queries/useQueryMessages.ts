@@ -49,7 +49,6 @@ export const useQueryMessages = (props = { dialogId: "", limit: 100 }) => {
           newMessages.push(response?.items[i]);
         }
       }
-      debugger;
       const formatted = [
         ...newMessages,
         ...updatedPrevMessages,
@@ -57,7 +56,6 @@ export const useQueryMessages = (props = { dialogId: "", limit: 100 }) => {
       return formatted.sort((a, b) => (a?.date_sent < b?.date_sent ? 1 : -1));
     }
     if (response?.limit) {
-      debugger;
       return {
         ...response,
         items: formattedMessages(),
@@ -78,10 +76,11 @@ export const useQueryMessages = (props = { dialogId: "", limit: 100 }) => {
     queryKey,
     getMessagesFn,
     {
-      staleTime: 0,
+      staleTime: 1200000, // 20 minutes
       enabled: chatConnected && props.dialogId !== "" && !!props.dialogId,
       getNextPageParam: () => 0,
       getPreviousPageParam: () => 0,
+      refetchOnWindowFocus: true,
     }
   );
   return { ...query, getPrevMessages };
