@@ -8,11 +8,9 @@ import { store } from "./Redux/store";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "./ReactQuery";
 import { ReactQueryDevtools } from "react-query/devtools";
-import {ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { theme } from "./Theme";
 const root = ReactDOM.createRoot(document.getElementById("root") as any);
-
-
 
 root.render(
   <ThemeProvider theme={theme}>
