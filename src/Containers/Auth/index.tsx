@@ -11,17 +11,17 @@ import { Stack } from "@mui/system";
 import { useQueryFirebaseUserData } from "../../ReactQuery";
 import Contacts from "../Contacts";
 import Profile from "../Profile";
-import logo from "../../Files/logo.png";
 import { FirebaseActions } from "../../Firebase";
 import { useMutationLogout } from "../../ReactQuery/Mutations/useMutationLogout";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Chat from "../Chat";
 import { useAppSelector } from "../../Redux/useAppSelector";
+import { AppLogo } from "../../Components/AppLogo";
 
 const WelcomeElements = () => {
   return (
-    <Stack flex={1} height="100vh" justifyContent="center">
+    <Stack flex={1} height="100%" justifyContent="center" bgcolor={'white'}>
       <Typography variant="h4">Welcome To Whatsapp-clone!</Typography>
       <Typography variant="h5" color="GrayText">
         Select a contact to begin chatting
@@ -77,14 +77,7 @@ const Auth = () => {
         <Stack alignItems={"center"} justifyContent="space-evenly" spacing={4}>
           <Box>
             <Box sx={{ alignItems: "center", justifyItems: "center" }}>
-              <img
-                src={logo}
-                style={{
-                  width: "200px",
-                  height: "auto",
-                  objectFit: "contain",
-                }}
-              />
+              <AppLogo />
             </Box>
             <Typography variant="h4">Verify your account</Typography>
           </Box>
@@ -128,7 +121,7 @@ const Auth = () => {
           direction="column"
           sx={{
             width: "100vw",
-            height: "100vh",
+            height: window.innerHeight,
             overflow: "clip",
           }}
         >
@@ -152,10 +145,17 @@ const Auth = () => {
           </Grid>
         </Stack>
       ) : (
-        <>
-          <Typography>Please wait while we prepare your data</Typography>{" "}
+        <Stack
+          sx={{
+            height: window.outerHeight/3,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography>Please wait while we prepare your data</Typography>
+          <AppLogo width={'400px'} />
           <CircularProgress />
-        </>
+        </Stack>
       )}
     </>
   );
