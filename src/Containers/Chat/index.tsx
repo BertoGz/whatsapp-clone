@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormHelperText,
   Stack,
   TextField,
   Typography,
@@ -20,6 +21,7 @@ import { useMutationSendMessage } from "../../ReactQuery/Mutations/useMutationSe
 import { PressableText } from "../../Components/ClickableText";
 import { VideoCameraFrontRounded } from "@mui/icons-material";
 import { colorHelper, theme } from "../../Theme";
+import { PromisedQb } from "../../Quickblox";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
 
@@ -90,13 +92,41 @@ const LoadMoreSection = (props: { showLoadMore: boolean; onLoadMore: any }) => {
     </>
   );
 };
-const InputSection = ({ dialogId, opponentId }) => {
-  const [input, setInput] = useState("");
+function usePrevious(value: any) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
+}
 
+const InputSection = ({ dialogId, opponentId, full_name }) => {
+  const [input, setInput] = useState("");
+  const lastInput = usePrevious(input);
   console.log("input", input);
+  useEffect(() => {
+    if (input) {
+      // send is typing
+      debugger;
+      PromisedQb.sendIsTyping(true, opponentId);
+    } else if (!input) {
+      PromisedQb.sendIsTyping(false, opponentId);
+      // stop send ins typing
+    }
+  }, [input]);
   const { mutateAsync } = useMutationSendMessage({ dialogId });
+  const userIsTyping = useAppSelector((state) => state.Quickblox.userIsTyping);
+  const isOpponentTyping = useMemo(() => {
+    const parsed = JSON.parse(userIsTyping);
+    if (parsed?.[opponentId]) {
+      return true;
+    }
+  }, [userIsTyping]);
   function onSendMessage() {
-    debugger;
     mutateAsync(
       { dialogId, opponentId, message: input },
       {
@@ -108,21 +138,31 @@ const InputSection = ({ dialogId, opponentId }) => {
     );
   }
   return (
-    <Box
+    <Stack
       sx={{
         display: "flex",
         width: "100%",
         align: "center",
         backgroundColor: theme.palette.secondary.dark,
+        px: 2,
+        pb: 2,
       }}
     >
+      <FormHelperText
+        sx={{
+          color: theme.palette.getContrastText(theme.palette.secondary.dark),
+         height:'20px'
+        }}
+      >
+        {isOpponentTyping ? `${full_name} is typing...` : ""}
+      </FormHelperText>
+
       <Stack
         direction="row"
         sx={{
           width: "100%",
           maxWidth: "1000px",
           backgroundColor: theme.palette.background.default,
-          margin: 2,
         }}
       >
         <TextField
@@ -140,7 +180,7 @@ const InputSection = ({ dialogId, opponentId }) => {
           Send
         </Button>
       </Stack>
-    </Box>
+    </Stack>
   );
 };
 
@@ -154,7 +194,7 @@ const Chat = () => {
   console.log("selectedProfile", selectedProfile, contact);
   const { dialog, user } = contact?.[0] || {};
   const { _id } = dialog || {};
-  const { id: opponent_id } = user || {};
+  const { id: opponent_id, full_name } = user || {};
 
   const {
     data: messagesResponse,
@@ -303,7 +343,11 @@ const Chat = () => {
           />
         </div>
 
-        <InputSection dialogId={_id} opponentId={opponent_id} />
+        <InputSection
+          dialogId={_id}
+          opponentId={opponent_id}
+          {...{ full_name }}
+        />
       </Stack>
     </>
   );
