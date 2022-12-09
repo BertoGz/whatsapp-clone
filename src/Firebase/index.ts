@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
 
 import {
   getAuth,
@@ -9,6 +10,7 @@ import {
   signOut as FBsignOut,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 // Follow this pattern to import other Firebase services
 // import { } from 'firebase/<service>';
@@ -32,7 +34,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
 console.log("auth", auth);
@@ -114,5 +116,13 @@ export const FirebaseActions = {
   getCurrentUser: () => {
     //debugger
     return auth.currentUser;
+  },
+  updateProfile: ({ displayName }: { displayName?: string }) => {
+    const user = auth.currentUser as any;
+    if (user) {
+      return updateProfile(user, { displayName }).catch((e: any) =>
+        Promise.reject(`error at update profile ${e}`)
+      );
+    }
   },
 };
