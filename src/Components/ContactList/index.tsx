@@ -47,6 +47,7 @@ const ContactList = ({
           variant="h6"
           sx={{ color: colorHelper.lightenColor("secondaryLight", 0.4) }}
           textAlign={"center"}
+          maxWidth='300px'
         >
           This is your contact list. Connected users will be found here.
         </Typography>
