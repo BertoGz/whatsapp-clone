@@ -10,6 +10,7 @@ import {
 import { Stack } from "@mui/system";
 import { useState } from "react";
 import { PressableText } from "../../Components/ClickableText";
+import { FirebaseActions } from "../../Firebase";
 import { PromisedQb } from "../../Quickblox";
 import { clientData, useMutationUpdateRelationship } from "../../ReactQuery";
 import { devDeleteDialog } from "../../Requests";
@@ -62,6 +63,9 @@ const DebugMenu = () => {
   function handleLogQbSession() {
     console.log("!!@@qbSession", PromisedQb.getSessionUser());
   }
+  async function tryUpdateProfileName() {
+    FirebaseActions.updateProfile({ displayName: debugInput });
+  }
   //return <></>;
   return (
     <>
@@ -110,6 +114,9 @@ const DebugMenu = () => {
               </PressableText>
               <PressableText onClick={tryDevDeleteDialog}>
                 Delete Dialog (relationship.id)
+              </PressableText>
+              <PressableText onClick={tryUpdateProfileName}>
+                Update Profile name
               </PressableText>
             </Stack>
             <Divider variant="fullWidth" />
