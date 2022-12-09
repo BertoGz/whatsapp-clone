@@ -19,7 +19,6 @@ type errorTypes =
 async function loginUserFn(loginParams: TypeParamsUserLogin) {
   let response;
   const user = await FirebaseActions.getCurrentUser(); //window.localStorage.getItem("accessToken");
- // debugger
   if (loginParams.isEmailLinkSignin) {
     response = await FirebaseActions.signInWithEmailLink();
   } else if (user) {
