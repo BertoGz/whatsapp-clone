@@ -225,6 +225,20 @@ export const PromisedQb = {
       }
     });
   },
+  sendSystemMessage: async (opponenId = 0, msg: string) => {
+    var message = {
+      body: msg,
+    };
+    return new Promise((res, rej) => {
+      try {
+        const response = QB.chat.sendSystemMessage(opponenId, message);
+        res(response);
+      } catch (e) {
+        debugger;
+        rej(e);
+      }
+    });
+  },
 };
 export const QbHelpers = {
   //getUserJid: () => QB.chat.helpers.getUserJid(user.id, 24325),
@@ -277,6 +291,15 @@ export const connectChat = async (userCredentials = {}) => {
   onMessageErrorListener: () => QB.chat.onMessageErrorListener,
   onMessageListener: () => QB.chat.onMessageListener,
 };*/
+
+function handleMessage(msg) {
+  const messageType = msg?.body || {};
+  switch (messageType) {
+    case SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT:
+      queryClient.refetchQueries(["contacts"]);
+      break;
+  }
+}
 
 function onReconnectListener(msg: any) {
   console.log("##onReconnect");
@@ -331,6 +354,10 @@ function onMessageTypingListener(isTyping, userId) {
   const { dispatch } = store;
   dispatch(setUserIsTyping({ isTyping, userId }));
 }
+function onSystemMessageListener(msg) {
+  handleMessage(msg);
+  console.log("!!@@got system message", msg);
+}
 
 /*QB.chat.onReconnectListener = onReconnectListener;
 QB.chat.onDisconnectedListener = onDisconnectedListener;
@@ -350,6 +377,7 @@ export function InitQbChatListeners() {
   QB.chat.onSubscribeListener = onSubscribeListener;
   QB.chat.onMessageListener = onMessageListener;
   QB.chat.onMessageTypingListener = onMessageTypingListener;
+  QB.chat.onSystemMessageListener = onSystemMessageListener;
   /* QB.chat.onReconnectListener = onReconnectListener;
   QB.chat.onDisconnectedListener = onDisconnectedListener;
   QB.chat.onSubscribeListener = onSubscribeListener;
