@@ -71,7 +71,6 @@ const Auth = () => {
     <>
       {userSessionValid ? (
         <Stack
-          direction="column"
           sx={{
             width: "100vw",
             height: window.innerHeight,
