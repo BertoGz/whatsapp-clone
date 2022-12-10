@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { useMemo } from "react";
 import PendingContactListItem from "../../Components/PendingContactListItem";
+import { SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT } from "../../Contants";
+import { PromisedQb } from "../../Quickblox";
 import { useQueryContacts } from "../../ReactQuery";
 import { useMutationUpdateRelationship } from "../../ReactQuery";
 
@@ -28,7 +30,14 @@ export const RequestsModal = () => {
         relationship_id: contact.relationship.relationship_id,
         status: 1,
       },
-      { onSuccess: () => {} }
+      {
+        onSuccess: () => {
+          PromisedQb.sendSystemMessage(
+            contact.user.id,
+            SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT
+          );
+        },
+      }
     );
   }
   const pendingUserRequests = useMemo(() => {
