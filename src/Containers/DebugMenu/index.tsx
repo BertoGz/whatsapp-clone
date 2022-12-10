@@ -13,6 +13,7 @@ import { PressableText } from "../../Components/ClickableText";
 import { FirebaseActions } from "../../Firebase";
 import { PromisedQb } from "../../Quickblox";
 import { clientData, useMutationUpdateRelationship } from "../../ReactQuery";
+import { store } from "../../Redux/store";
 import { devDeleteDialog } from "../../Requests";
 
 const DebugMenu = () => {
@@ -20,6 +21,7 @@ const DebugMenu = () => {
     useMutationUpdateRelationship();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [debugInput, setDebugInput] = useState("");
+  const [debugInput2, setDebugInput2] = useState("");
   function onTryDisconnectChat() {
     PromisedQb.chatDisconnect();
   }
@@ -66,6 +68,9 @@ const DebugMenu = () => {
   async function tryUpdateProfileName() {
     FirebaseActions.updateProfile({ displayName: debugInput });
   }
+  async function handleSendSystemMessage() {
+    PromisedQb.sendSystemMessage(parseInt(debugInput, 10), debugInput2);
+  }
   //return <></>;
   return (
     <>
@@ -108,6 +113,12 @@ const DebugMenu = () => {
                   setDebugInput(e.target.value);
                 }}
               />
+              <TextField
+                value={debugInput2}
+                onChange={(e) => {
+                  setDebugInput2(e.target.value);
+                }}
+              />
 
               <PressableText onClick={tryRemoveFriend}>
                 Remove Friend (user.id)
@@ -125,6 +136,9 @@ const DebugMenu = () => {
             </PressableText>
             <PressableText onClick={handleToggleModal}>
               Close Menu
+            </PressableText>
+            <PressableText onClick={handleSendSystemMessage}>
+              Send System Message
             </PressableText>
           </Stack>
         </Paper>
