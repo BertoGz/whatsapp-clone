@@ -107,8 +107,13 @@ export const useQueryContacts = (
     {
       enabled: chatConnected,
       keepPreviousData: true,
-      staleTime: 60000,
-      initialData: () => {
+      staleTime: 60000, // 1 min
+    }
+  );
+  return query;
+};
+/**
+ *  initialData: () => {
         const contacts = clientData.getContacts();
         if (!contacts?.length) {
           return;
@@ -129,8 +134,4 @@ export const useQueryContacts = (
           }
           return false;
         });
-      },
-    }
-  );
-  return query;
-};
+ */
