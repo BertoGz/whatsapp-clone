@@ -83,7 +83,7 @@ export const useQbSession = () => {
           login: email,
           email,
           password: uid,
-          full_name: "QuickBlox Test",
+          full_name: userData.displayName,
         };
 
         const newUser = await PromisedQb.createUser(createParams);
