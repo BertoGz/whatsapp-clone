@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import {
+  Badge,
   Box,
   ButtonBase,
   OutlinedInput,
   Popover,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import {
@@ -17,8 +19,33 @@ import {
 import { RequestsModal } from "../../Containers/RequestsModal";
 import { AddContactModal } from "../../Containers/AddContactModal";
 import { colorHelper, theme } from "../../Theme";
+import { useQueryContacts } from "../../ReactQuery";
 
 let modalOpen = "";
+
+const RequestsButton = ({
+  handleToggleRequestsModal,
+}: {
+  handleToggleRequestsModal: (event: any) => void;
+}) => {
+  const { data } = useQueryContacts({ status: "pending" });
+
+  return (
+    <Tooltip title="Notifications">
+      <Badge badgeContent={data?.length || 0} color="info">
+        <ButtonBase onClick={handleToggleRequestsModal}>
+          <Notifications
+            fontSize="large"
+            sx={{
+              color: colorHelper.lightenColor("secondaryMain", 0.6),
+            }}
+          />
+        </ButtonBase>
+      </Badge>
+    </Tooltip>
+  );
+};
+
 const SearchBar = () => {
   const [input, setInput] = useState("");
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -65,7 +92,7 @@ const SearchBar = () => {
             />
           </ButtonBase>
         </Box>
-        <Box>
+        <Box px="10px">
           <Tooltip title="Add new contact">
             <ButtonBase onClick={handleToggleAddContactModal}>
               <PersonAdd
@@ -76,16 +103,7 @@ const SearchBar = () => {
               />
             </ButtonBase>
           </Tooltip>
-          <Tooltip title="Notifications">
-            <ButtonBase onClick={handleToggleRequestsModal}>
-              <Notifications
-                fontSize="large"
-                sx={{
-                  color: colorHelper.lightenColor("secondaryMain", 0.6),
-                }}
-              />
-            </ButtonBase>
-          </Tooltip>
+          <RequestsButton {...{ handleToggleRequestsModal }} />
         </Box>
       </Stack>
       <Stack
