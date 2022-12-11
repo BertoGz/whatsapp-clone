@@ -9,12 +9,27 @@ import { useAppSelector } from "../../Redux/useAppSelector";
 import { AppLogo } from "../../Components/AppLogo";
 
 import FinishSignUp from "../FinishSignUp";
+import { colorHelper } from "../../Theme";
 
 const WelcomeElements = () => {
+  const theme = useTheme();
   return (
-    <Stack flex={1} height="100%" justifyContent="center" bgcolor={"white"}>
-      <Typography variant="h4">Welcome To Whatsapp-clone!</Typography>
-      <Typography variant="h5" color="GrayText">
+    <Stack
+      flex={1}
+      height="100%"
+      justifyContent="center"
+      bgcolor={theme.palette.secondary.dark}
+    >
+      <Typography
+        variant="h4"
+        color={colorHelper.contrastText("secondaryDark")}
+      >
+        Welcome To Whatsapp-clone!
+      </Typography>
+      <Typography
+        variant="h5"
+        color={colorHelper.contrastText("secondaryDark")}
+      >
         Select a contact to begin chatting
       </Typography>
     </Stack>
