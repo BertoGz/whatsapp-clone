@@ -6,7 +6,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import PendingContactListItem from "../../Components/PendingContactListItem";
 import { SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT } from "../../Contants";
 import { PromisedQb } from "../../Quickblox";
@@ -18,9 +18,16 @@ export const RequestsModal = () => {
     data: pendingUsers,
     isFetching,
     refetch,
+    isStale,
+    isFetched
   } = useQueryContacts({
     status: "pending",
   });
+  useEffect(() => {
+    if (isStale || !isFetched) {
+      refetch();
+    }
+  }, []);
   const { mutateAsync: updateRelationshipMutation } =
     useMutationUpdateRelationship();
 
