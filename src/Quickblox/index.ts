@@ -1,5 +1,6 @@
 // @ts-nocheck
 import * as QB from "quickblox/quickblox";
+import { SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT } from "../Contants";
 import { queryClient } from "../ReactQuery";
 import { setChatConnected, setUserIsTyping } from "../Redux/Quickblox";
 import { store } from "../Redux/store";
@@ -228,6 +229,7 @@ export const PromisedQb = {
   sendSystemMessage: async (opponenId = 0, msg: string) => {
     var message = {
       body: msg,
+      extension: {},
     };
     return new Promise((res, rej) => {
       try {
@@ -315,6 +317,7 @@ function onSubscribeListener(msg: any) {
 function onConfirmSubscribeListener() {
   console.log("##onConfirmSubscribeListener");
 }
+
 function onMessageListener(
   userId: any,
   msg: { body: string; dialog_id: string }
@@ -355,7 +358,7 @@ function onMessageTypingListener(isTyping, userId) {
   dispatch(setUserIsTyping({ isTyping, userId }));
 }
 function onSystemMessageListener(msg) {
-  handleMessage(msg);
+   handleMessage(msg);
   console.log("!!@@got system message", msg);
 }
 
@@ -378,8 +381,8 @@ export function InitQbChatListeners() {
   QB.chat.onMessageListener = onMessageListener;
   QB.chat.onMessageTypingListener = onMessageTypingListener;
   QB.chat.onSystemMessageListener = onSystemMessageListener;
-  /* QB.chat.onReconnectListener = onReconnectListener;
-  QB.chat.onDisconnectedListener = onDisconnectedListener;
-  QB.chat.onSubscribeListener = onSubscribeListener;
+  /*
+ 
+
   QB.chat.chatConnectedListener = chatConnectedListener*/
 }
