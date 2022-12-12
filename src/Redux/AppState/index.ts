@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-const initialState = { selectedProfile: 0, isLoggedOn: false };
+const initialState = {
+  selectedProfile: 0,
+  isLoggedOn: false,
+  hamburgerIsOpen: false,
+};
 export const AppState = createSlice({
   name: "appState",
   initialState,
@@ -13,9 +17,16 @@ export const AppState = createSlice({
     resetState: (state) => {
       state.selectedProfile = initialState.selectedProfile;
     },
+    setHamburgerIsOpen: (state, action) => {
+      state.hamburgerIsOpen = action.payload;
+    },
   },
 });
 
-export const { setSelectedProfile, setIsLoggedOn, resetState } =
-  AppState.actions;
+export const {
+  setSelectedProfile,
+  setIsLoggedOn,
+  setHamburgerIsOpen,
+  resetState,
+} = AppState.actions;
 export default AppState.reducer;
