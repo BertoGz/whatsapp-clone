@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+@media only screen and (max-width: 800px) {
+  .contacts-container {
+    display: none;
+  }
+  .mobile-view-only {
+    display: block;
+  }
+  .desktop-view-only {
+    display: none;
+  }
+}
+@media only screen and (min-width: 800px) {
+  .mobile-view-only {
+    display: none;
+  }
+}
