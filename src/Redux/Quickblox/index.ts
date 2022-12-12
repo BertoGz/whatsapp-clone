@@ -59,7 +59,6 @@ const Quickblox = createSlice({
       state.qbSession = action.payload;
     },
     setUserIsTyping: (state, action) => {
-      // debugger;
       const { userId, isTyping } = action.payload || {};
       debugger;
       const parsed = JSON.parse(state.userIsTyping);
