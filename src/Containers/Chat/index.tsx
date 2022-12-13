@@ -334,7 +334,18 @@ const Chat = () => {
           }}
         >
           <LoadMoreSection showLoadMore={hasMore} onLoadMore={onLoadMore} />
-          {isLoading ? <CircularProgress /> : MessageList}
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <Stack
+              sx={{ width: "100%" }}
+              alignSelf={"center"}
+              direction="column"
+              maxWidth={"800px"}
+            >
+              {MessageList}
+            </Stack>
+          )}
           <div
             style={{
               pointerEvents: "none",
