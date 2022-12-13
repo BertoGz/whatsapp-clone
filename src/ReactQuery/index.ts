@@ -22,17 +22,19 @@ export const clientData = {
   getQuickbloxUserData: () => queryClient.getQueryData("qbUserData") as any,
   getContacts: () => {
     const cache = queryClient.getQueryCache().findAll("contacts");
-
     let queryData = [] as Array<TypeDataEntityContact | undefined>;
     if (cache?.length) {
       cache.forEach((cache) => {
         const contacts = cache.state.data as Array<TypeDataEntityContact>;
-        queryData = [...queryData, ...contacts];
+        if (contacts?.length) {
+          queryData = [...queryData, ...contacts];
+        }
       });
+      debugger;
     } else {
       return undefined;
     }
-    
+
     return queryData;
   },
   getPendingContacts: () =>
