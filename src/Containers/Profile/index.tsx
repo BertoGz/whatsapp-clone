@@ -12,8 +12,7 @@ import EditableLabel from "../../Components/EditableLabel";
 import { Box } from "@mui/system";
 import { useAppSelector } from "../../Redux/useAppSelector";
 import { useQueryContact } from "../../ReactQuery";
-const profilepic =
-  "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
+import { profilepic } from "../../Contants";
 
 const BaseInfo = ({
   val = "",

@@ -11,8 +11,7 @@ import { Stack } from "@mui/system";
 import { ArrowForwardIos } from "@mui/icons-material";
 import { useAppSelector } from "../../Redux/useAppSelector";
 import { colorHelper } from "../../Theme";
-const profilepic =
-  "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
+import { profilepic } from "../../Contants";
 
 const FriendRequestButtons = ({
   onReject,
@@ -119,7 +118,7 @@ const ContactListItem = ({
         overflow={"hidden"}
       >
         <Avatar
-          alt={fullname}
+          alt={full_name}
           src={profilepic}
           sx={{
             outlineStyle: "solid",
