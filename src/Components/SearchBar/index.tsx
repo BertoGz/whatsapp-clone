@@ -20,6 +20,7 @@ import { RequestsModal } from "../../Containers/RequestsModal";
 import { AddContactModal } from "../../Containers/AddContactModal";
 import { colorHelper, theme } from "../../Theme";
 import { useQueryContacts } from "../../ReactQuery";
+import { SettingsModal } from "../../Containers/SettingsModal";
 
 let modalOpen = "";
 
@@ -72,6 +73,17 @@ const SearchBar = () => {
     modalOpen = "addContact";
     setAnchorEl(event.currentTarget);
   }
+  function handleToggledSettingsModal(
+    event: React.MouseEvent<HTMLButtonElement>
+  ) {
+    if (anchorEl) {
+      setAnchorEl(null);
+      modalOpen = "";
+      return;
+    }
+    modalOpen = "settings";
+    setAnchorEl(event.currentTarget);
+  }
   return (
     <>
       <Stack
@@ -84,7 +96,7 @@ const SearchBar = () => {
         }}
       >
         <Box>
-          <ButtonBase sx={{ p: 1 }}>
+          <ButtonBase sx={{ p: 1 }} onClick={handleToggledSettingsModal}>
             <Settings
               sx={{
                 color: colorHelper.lightenColor("secondaryMain", 0.6),
@@ -155,6 +167,7 @@ const SearchBar = () => {
       >
         {modalOpen === "requests" && <RequestsModal />}
         {modalOpen === "addContact" && <AddContactModal />}
+        {modalOpen === "settings" && <SettingsModal />}
       </Popover>
     </>
   );
