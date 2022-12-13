@@ -35,10 +35,11 @@ const TextMessage = ({
   message: TypeDataEntityMessage;
   extraProps: { isSender: boolean };
 }) => {
-  const { message: text, created_at } = message || {};
+  const { message: text, created_at, _id } = message || {};
   const { isSender } = extraProps || {};
   return (
     <MessageBox
+      key={_id}
       position={isSender ? "right" : "left"}
       type={"text"}
       text={text}
@@ -184,14 +185,14 @@ const InputSection = ({ dialogId, opponentId, full_name }) => {
   );
 };
 
-let firstMount = false;
+let scrollTo = "bottom";
 const Chat = () => {
   const theme = useTheme();
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );
   const prevContact = usePrevValue(selectedProfile);
-  const { data: contact, isSuccess } = useQueryContact(selectedProfile);
+  const { data: contact } = useQueryContact(selectedProfile);
   console.log("selectedProfile", selectedProfile, contact);
   const { dialog, user } = contact?.[0] || {};
   const { _id } = dialog || {};
@@ -210,12 +211,27 @@ const Chat = () => {
   // const { items: messages } = messagesResponse || {};
   // console.log("!!@@messages", messagesResponse);
   const messageListRef = useRef();
+  const scrollToBottom = () => {
+    messageListRef?.current?.scrollIntoView({ behavior: "smooth" });
+    const scrollContainer = document.getElementById("scrollContainer");
+    scrollContainer.scrollTo({
+      top: scrollContainer.scrollHeight,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+  const scrollToTop = () => {
+    messageListRef?.current?.scrollIntoView({ behavior: "smooth" });
+    const scrollContainer = document.getElementById("scrollContainer");
+    scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const MessageList = useMemo(() => {
     if (!messagesResponse?.items?.length) {
       return undefined;
     }
     const messagesCopy = [...messagesResponse.items];
-    firstMount = true;
+
     return messagesCopy?.reverse()?.map((message) => {
       const { attachments, sender_id } = message || {};
       let messageType: "photo" | "text" = "text";
@@ -233,29 +249,24 @@ const Chat = () => {
     });
   }, [messagesResponse]);
 
-  const scrollToBottom = () => {
-    messageListRef?.current?.scrollIntoView({ behavior: "smooth" });
-    const scrollContainer = document.getElementById("scrollContainer");
-    scrollContainer.scrollTo({
-      top: scrollContainer.scrollHeight,
-      left: 0,
-      behavior: "auto",
-    });
-  };
-
   useEffect(() => {
     if (prevContact !== selectedProfile) {
-      firstMount = false;
+      //firstMount = false;
     }
   }, [selectedProfile]);
+
+  async function onLoadMore() {
+    scrollTo = "top";
+    await getPrevMessages();
+  }
   useEffect(() => {
-    if (firstMount) {
+    if (scrollTo === "top") {
+      scrollToTop();
+    } else {
       scrollToBottom();
     }
-  }, [firstMount]);
-  function onLoadMore() {
-    getPrevMessages();
-  }
+    scrollTo = "bottom";
+  }, [MessageList]);
   const headerHeight = document.getElementById("mobile-header")?.clientHeight;
   return (
     <>
