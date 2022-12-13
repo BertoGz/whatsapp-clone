@@ -22,6 +22,7 @@ import { PressableText } from "../../Components/ClickableText";
 import { VideoCameraFrontRounded } from "@mui/icons-material";
 import { colorHelper, theme } from "../../Theme";
 import { PromisedQb } from "../../Quickblox";
+import { usePrevValue } from "../../Hooks/usePrevValue";
 const profilepic =
   "https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
 
@@ -92,26 +93,15 @@ const LoadMoreSection = (props: { showLoadMore: boolean; onLoadMore: any }) => {
     </>
   );
 };
-function usePrevious(value: any) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef();
-  // Store current value in ref
-  useEffect(() => {
-    ref.current = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
-  return ref.current;
-}
 
 const InputSection = ({ dialogId, opponentId, full_name }) => {
   const [input, setInput] = useState("");
-  const lastInput = usePrevious(input);
+  const lastInput = usePrevValue(input);
   console.log("input", input);
   useEffect(() => {
     if (input) {
       // send is typing
-      debugger;
+
       PromisedQb.sendIsTyping(true, opponentId);
     } else if (!input) {
       PromisedQb.sendIsTyping(false, opponentId);
@@ -144,14 +134,14 @@ const InputSection = ({ dialogId, opponentId, full_name }) => {
         width: "100%",
         align: "center",
         backgroundColor: theme.palette.secondary.dark,
-        px: 2,
+
         pb: 2,
       }}
     >
       <FormHelperText
         sx={{
           color: theme.palette.getContrastText(theme.palette.secondary.dark),
-         height:'20px'
+          height: "20px",
         }}
       >
         {isOpponentTyping ? `${full_name} is typing...` : ""}
@@ -160,19 +150,29 @@ const InputSection = ({ dialogId, opponentId, full_name }) => {
       <Stack
         direction="row"
         sx={{
-          width: "100%",
-          maxWidth: "1000px",
-          backgroundColor: theme.palette.background.default,
+          px: 1,
         }}
+        maxWidth={"800px"}
       >
         <TextField
+          fullWidth
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          sx={{ width: "100%", borderRadius: 0, justifyContent: "center" }}
+          sx={{
+            mr: 1,
+            backgroundColor: theme.palette.background.default,
+            borderRadius: 0,
+            justifyContent: "center",
+          }}
           InputProps={{ style: { borderRadius: 0, height: "40px" } }}
         />
         <Button
-          sx={{ textTransform: "none" }}
+          sx={{
+            width: "30px",
+            textTransform: "none",
+            fontWeight: "bold",
+            backgroundColor: theme.palette.background.default,
+          }}
           color="secondary"
           disabled={!input}
           onClick={onSendMessage}
@@ -184,12 +184,13 @@ const InputSection = ({ dialogId, opponentId, full_name }) => {
   );
 };
 
+let firstMount = false;
 const Chat = () => {
   const theme = useTheme();
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );
-
+  const prevContact = usePrevValue(selectedProfile);
   const { data: contact, isSuccess } = useQueryContact(selectedProfile);
   console.log("selectedProfile", selectedProfile, contact);
   const { dialog, user } = contact?.[0] || {};
@@ -205,6 +206,7 @@ const Chat = () => {
     limit: 10,
   });
   const { hasMore } = messagesResponse || {};
+
   // const { items: messages } = messagesResponse || {};
   // console.log("!!@@messages", messagesResponse);
   const messageListRef = useRef();
@@ -213,6 +215,7 @@ const Chat = () => {
       return undefined;
     }
     const messagesCopy = [...messagesResponse.items];
+    firstMount = true;
     return messagesCopy?.reverse()?.map((message) => {
       const { attachments, sender_id } = message || {};
       let messageType: "photo" | "text" = "text";
@@ -240,61 +243,70 @@ const Chat = () => {
     });
   };
 
-  console.log("messageref", messageListRef);
   useEffect(() => {
-    scrollToBottom();
-  }, [isSuccess]);
+    if (prevContact !== selectedProfile) {
+      firstMount = false;
+    }
+  }, [selectedProfile]);
+  useEffect(() => {
+    if (firstMount) {
+      scrollToBottom();
+    }
+  }, [firstMount]);
   function onLoadMore() {
     getPrevMessages();
-    // refetch();
   }
+  const headerHeight = document.getElementById("mobile-header")?.clientHeight;
   return (
     <>
       <Stack
         direction="column"
         sx={{
           width: "100%",
-          height: "100%",
+          height: window.innerHeight - headerHeight,
+          backgroundColor: "red",
         }}
       >
-        <Stack
-          direction="row"
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-            alignItems: "center",
-            borderWidth: 0,
-            borderStyle: "solid",
-            zIndex: 1,
-            height: "60px",
-          }}
-          justifyContent="space-between"
-        >
-          <Stack direction="row" alignItems={"center"} px={2}>
-            <Avatar
-              alt={user?.full_name}
-              src={profilepic}
-              sx={{
-                outlineStyle: "solid",
-                outlineWidth: "2px",
-                outlineColor: theme.palette.secondary.main,
-                margin: 1,
-              }}
-            />
-            <Typography
-              sx={{
-                color: colorHelper.contrastText("secondaryMain"),
-              }}
-            >
-              {user?.full_name}
-            </Typography>
+        <div className="desktop-view-only">
+          <Stack
+            direction="row"
+            sx={{
+              backgroundColor: theme.palette.secondary.main,
+              alignItems: "center",
+              borderWidth: 0,
+              borderStyle: "solid",
+              zIndex: 1,
+              height: "60px",
+            }}
+            justifyContent="space-between"
+          >
+            <Stack direction="row" alignItems={"center"} px={2}>
+              <Avatar
+                alt={user?.full_name}
+                src={profilepic}
+                sx={{
+                  outlineStyle: "solid",
+                  outlineWidth: "2px",
+                  outlineColor: theme.palette.secondary.main,
+                  margin: 1,
+                }}
+              />
+              <Typography
+                sx={{
+                  color: colorHelper.contrastText("secondaryMain"),
+                }}
+              >
+                {user?.full_name}
+              </Typography>
+            </Stack>
+            <Box p={2}>
+              <VideoCameraFrontRounded
+                sx={{ color: colorHelper.contrastText("secondaryMain") }}
+                fontSize="large"
+              />
+            </Box>
           </Stack>
-          <Box p={2}>
-            <VideoCameraFrontRounded
-              sx={{ color: colorHelper.contrastText("secondaryMain") }}
-              fontSize="large"
-            />
-          </Box>
-        </Stack>
+        </div>
         <div
           id="scrollContainer"
           key={MessageList?.length}
@@ -304,25 +316,14 @@ const Chat = () => {
             overscrollBehaviorY: "contain",
             overflowAnchor: "none",
             justifyItems: "center",
-            display: "flex",
             flexDirection: "column",
-            height: "100%",
+            height: `calc(100%)`,
+
             backgroundColor: colorHelper.darkenColor("secondaryDark", 0.2),
           }}
         >
           <LoadMoreSection showLoadMore={hasMore} onLoadMore={onLoadMore} />
-          {isLoading ? (
-            <CircularProgress />
-          ) : (
-            <Stack
-              sx={{ width: "100%" }}
-              alignSelf={"center"}
-              direction="column"
-              maxWidth={"800px"}
-            >
-              {MessageList}
-            </Stack>
-          )}
+          {isLoading ? <CircularProgress /> : MessageList}
           <div
             style={{
               pointerEvents: "none",
