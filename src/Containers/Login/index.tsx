@@ -69,7 +69,10 @@ const SignInContents = () => {
         error === createUserErrorStates.invalidEmail
       );
     } else {
-      return error === loginUserErrorStates.incorrectCredentials;
+      return (
+        error === loginUserErrorStates.incorrectCredentials ||
+        error === loginUserErrorStates.userNotFound
+      );
     }
   }, [error, isSignUp]);
   const checkPasswordError = useMemo(() => {
@@ -89,7 +92,9 @@ const SignInContents = () => {
       case createUserErrorStates.weakPassword:
         return "Please use a password that is 6 or more characters in length";
       case loginUserErrorStates.incorrectCredentials:
+      case loginUserErrorStates.userNotFound:
         return "Incorrect password or email";
+
       case createUserErrorStates.networkError:
       case loginUserErrorStates.networkError:
         return "There is a network error";
@@ -141,6 +146,7 @@ const SignInContents = () => {
             }}
             placeholder="Email"
             variant="filled"
+            type={"email"}
           />
           {checkEmailError && (
             <FormHelperText>{getErrorMessage}</FormHelperText>
