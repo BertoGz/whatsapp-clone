@@ -161,7 +161,7 @@ const Auth = () => {
             justifyContent: "center",
           }}
         >
-          <AppLogo width={"400px"} />
+          <AppLogo width={`${Math.min(300, window.innerWidth / 1.3)}px`} />
           <CircularProgress />
           <Typography color="white" fontSize="18px">
             Please wait while we prepare your data
