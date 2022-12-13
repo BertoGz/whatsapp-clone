@@ -90,13 +90,17 @@ export const useQueryContacts = (
                   relationshipProps?.relationship_id
               );
               if (relationshipProps) {
-                if (!relationshipProps.isInitiator) {
-                  returnPayload.push({
-                    user: contact.user,
-                    dialog: findDialog,
-                    relationship: relationshipProps,
-                  });
+                if (
+                  relationshipProps.isInitiator &&
+                  props.status === "pending"
+                ) {
+                  return;
                 }
+                returnPayload.push({
+                  user: contact.user,
+                  dialog: findDialog,
+                  relationship: relationshipProps,
+                });
               }
             }
           });
