@@ -345,7 +345,6 @@ function onMessageListener(
 
   const key = ["messages", dialog_id];
   const messagesQuery = queryClient.getQueryData(key);
-  console.log("!!@@heree", key, messagesQuery);
   if (!messagesQuery?.limit) {
     return;
   }
@@ -358,8 +357,8 @@ function onMessageTypingListener(isTyping, userId) {
   dispatch(setUserIsTyping({ isTyping, userId }));
 }
 function onSystemMessageListener(msg) {
-   handleMessage(msg);
-  console.log("!!@@got system message", msg);
+  handleMessage(msg);
+  //console.log("!!@@got system message", msg);
 }
 
 /*QB.chat.onReconnectListener = onReconnectListener;
