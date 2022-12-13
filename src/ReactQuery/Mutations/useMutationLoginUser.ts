@@ -10,11 +10,13 @@ export const loginUserErrorStates = {
   null: null,
   networkError: "network-error",
   incorrectCredentials: "incorrectCredentials",
+  userNotFound: "auth/user-not-found",
 };
 type errorTypes =
   | typeof loginUserErrorStates.null
   | typeof loginUserErrorStates.networkError
-  | typeof loginUserErrorStates.incorrectCredentials;
+  | typeof loginUserErrorStates.incorrectCredentials
+  | typeof loginUserErrorStates.userNotFound;
 
 async function loginUserFn(loginParams: TypeParamsUserLogin) {
   let response;
@@ -41,12 +43,12 @@ async function loginUserFn(loginParams: TypeParamsUserLogin) {
     return Promise.resolve(response.data);
   } else {
     const { code } = response.data;
-    if (code === "asd") {
+    if (code === loginUserErrorStates.userNotFound) {
       // alert("Incorrect login credentials");
-      return Promise.reject(response.data);
+      return Promise.reject(loginUserErrorStates.userNotFound);
     } else {
       //   alert("Network error. Try again later.");
-      return Promise.reject(response.data);
+      return Promise.reject(code);
     }
   }
 }
