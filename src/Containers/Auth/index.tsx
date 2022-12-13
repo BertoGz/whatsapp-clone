@@ -1,4 +1,10 @@
-import { CircularProgress, Grid, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Drawer,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Stack } from "@mui/system";
 import { useQueryFirebaseUserData } from "../../ReactQuery";
 import Contacts from "../Contacts";
@@ -10,6 +16,10 @@ import { AppLogo } from "../../Components/AppLogo";
 
 import FinishSignUp from "../FinishSignUp";
 import { colorHelper } from "../../Theme";
+import { maxScreenHeight } from "../../Contants";
+import { setHamburgerIsOpen } from "../../Redux/AppState";
+import { useAppDispatch } from "../../Redux/useAppDispatch";
+import { MobileHeader } from "../../Components/MobileHeader";
 
 const WelcomeElements = () => {
   const theme = useTheme();
@@ -24,7 +34,7 @@ const WelcomeElements = () => {
         variant="h4"
         color={colorHelper.contrastText("secondaryDark")}
       >
-        Welcome To Whatsapp-clone!
+        Welcome To HowAreU!
       </Typography>
       <Typography
         variant="h5"
@@ -81,21 +91,52 @@ const Auth = () => {
   if (!emailVerified || !displayName) {
     return <FinishSignUp />;
   }
+  const AppDrawer = () => {
+    const dispatch = useAppDispatch();
+    const isOpen = useAppSelector((state) => state.AppState.hamburgerIsOpen);
+    return (
+      <>
+        <Drawer
+          className="mobile-view-only"
+          sx={{ zIndex: 1000 }}
+          PaperProps={{}}
+          anchor="left"
+          open={isOpen}
+          onClose={() => {
+            dispatch(setHamburgerIsOpen(false));
+          }}
+        >
+          <Box
+            minWidth={"300px"}
+            sx={{
+              borderWidth: 0,
+              borderRightWidth: 0.5,
+              borderRightColor: theme.palette.secondary.light,
+              borderStyle: "solid",
+              height: "100%",
+            }}
+          >
+            <Contacts />
+          </Box>
+        </Drawer>
+      </>
+    );
+  };
 
   return (
     <>
       {userSessionValid ? (
-        <Stack
-          sx={{
-            width: "100vw",
-            height: window.innerHeight,
-            overflow: "clip",
-          }}
-        >
-          <Grid direction="row" container sx={{ height: "100%" }}>
-            <Grid
-              item
-              xs={3.5}
+        <Stack direction="column" height={maxScreenHeight}>
+          <MobileHeader />
+          <Stack
+            display="flex"
+            direction="row"
+            sx={{ width: "100vw", height: "100%" }}
+          >
+            <AppDrawer />
+            <Box
+              className="desktop-view-only"
+              minWidth={"300px"}
               sx={{
                 borderWidth: 0,
                 borderRightWidth: 0.5,
@@ -105,11 +146,12 @@ const Auth = () => {
               }}
             >
               <Contacts />
-            </Grid>
-            <Grid item xs={8.5} sx={{ height: "100%" }}>
+            </Box>
+
+            <Box width="100%">
               <RightScreenContents />
-            </Grid>
-          </Grid>
+            </Box>
+          </Stack>
         </Stack>
       ) : (
         <Stack
