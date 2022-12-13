@@ -21,7 +21,7 @@ var CONFIG = { debug: false };
 export const useQbSession = () => {
   const { data: userData } = useQueryFirebaseUserData();
 
-  const { email, uid } = userData || {};
+  const { email, uid, displayName } = userData || {};
   const { qbInitialized, appSessionValid, userSessionValid } = useAppSelector(
     (state) => state.Quickblox
   );
@@ -78,7 +78,7 @@ export const useQbSession = () => {
           }
         });
 
-      if (userExists === false) {
+      if (userExists === false && displayName) {
         const createParams = {
           login: email,
           email,
