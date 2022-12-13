@@ -12,6 +12,9 @@ export const useQueryContact = (id: number) => {
     async () => {
       try {
         const contacts = clientData.getContacts();
+        if (!contacts?.length) {
+          return [];
+        }
         const contact = contacts?.find((contact) => contact?.user?.id === id);
         return [contact];
       } catch (e) {}
