@@ -30,7 +30,8 @@ export const MobileHeader = () => {
           backgroundColor: colorHelper.darkenColor("secondaryMain", 0),
           p: 1,
         }}
-        alignItems={"flex-start"}
+        alignItems={"center"}
+
       >
         <ButtonBase
           sx={{
@@ -47,6 +48,7 @@ export const MobileHeader = () => {
             <Stack
               direction="row"
               alignItems={"center"}
+            
               px={2}
               sx={{ width: "100%" }}
             >
@@ -68,7 +70,7 @@ export const MobileHeader = () => {
                 {user?.full_name}
               </Typography>
             </Stack>
-            <Box px={2} alignSelf="center">
+            <Box px={2} >
               <VideoCameraFrontRounded
                 sx={{ color: colorHelper.contrastText("secondaryMain") }}
                 fontSize="large"
