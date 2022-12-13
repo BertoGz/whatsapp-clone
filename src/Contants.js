@@ -6,3 +6,5 @@ export const SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT =
   "SYSTEM_MESSAGE_RELATIONSHIP_ACCEPT";
 
 export const maxScreenHeight = isMobile ? window.innerHeight : "100vh";
+export const profilepic =
+"https://www.thesun.co.uk/wp-content/uploads/2022/05/309E522E-D141-11EC-BE62-1280C3EF198F.jpeg";
