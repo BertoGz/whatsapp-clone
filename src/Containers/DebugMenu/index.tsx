@@ -71,6 +71,9 @@ const DebugMenu = () => {
   async function handleSendSystemMessage() {
     PromisedQb.sendSystemMessage(parseInt(debugInput, 10), debugInput2);
   }
+  async function handleDeleteMessage() {
+    PromisedQb.deleteMessage(debugInput);
+  }
   //return <></>;
   return (
     <>
@@ -139,6 +142,9 @@ const DebugMenu = () => {
             </PressableText>
             <PressableText onClick={handleSendSystemMessage}>
               Send System Message
+            </PressableText>
+            <PressableText onClick={handleDeleteMessage}>
+              Delete Message
             </PressableText>
           </Stack>
         </Paper>

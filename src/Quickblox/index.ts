@@ -241,6 +241,12 @@ export const PromisedQb = {
       }
     });
   },
+  deleteMessage: async (messageId) => {
+    var params = {
+      force: 1, // remove message from all users' histories
+    };
+    QB.chat.message.delete(messageId, params, function (error, result) {});
+  },
 };
 export const QbHelpers = {
   //getUserJid: () => QB.chat.helpers.getUserJid(user.id, 24325),
