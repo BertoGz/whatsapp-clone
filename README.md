@@ -1,4 +1,4 @@
-# HowAreU: Chat app
+# Whatsapp Clone
 ### Project Summery
 This [React](https://reactjs.org/) project allows users to signup, connect and chat with other users.
 - Use Firebase to authenticate users and email verification
@@ -10,7 +10,7 @@ This [React](https://reactjs.org/) project allows users to signup, connect and c
 
 **Interactable Demo**
 [HowAreU: Chat app](https://whatsapp-clone-f4523.web.app/)
-
+![image](src/Files/screenshot.png)
 **Installation**
 clone the repo and navigate to the folder and run
 - **npm install** to install project dependencies
