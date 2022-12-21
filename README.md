@@ -1,6 +1,6 @@
 # Whatsapp Clone
 ### Project Summery
-Whatsapp clone (https://reactjs.org/) project allows users to signup, connect and chat with other users.
+Whatsapp clone project allows users to signup, connect and chat with other users.
 - Use Firebase to authenticate users and email verification
 - Use Quickblox for messaging
 - Use Postgres/NodeJs server to handle api request
