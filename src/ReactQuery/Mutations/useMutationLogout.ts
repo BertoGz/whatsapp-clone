@@ -5,8 +5,8 @@ import { FirebaseActions } from "../../Firebase";
 type errorTypes = {};
 
 async function logoutFn() {
-  const response = await FirebaseActions.signOutUser();
-  queryClient.removeQueries()
+  await FirebaseActions.signOutUser();
+  queryClient.removeQueries();
   return Promise.resolve(1);
 }
 
