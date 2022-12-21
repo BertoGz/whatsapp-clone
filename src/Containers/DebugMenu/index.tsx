@@ -13,7 +13,6 @@ import { PressableText } from "../../Components/ClickableText";
 import { FirebaseActions } from "../../Firebase";
 import { PromisedQb } from "../../Quickblox";
 import { clientData, useMutationUpdateRelationship } from "../../ReactQuery";
-import { store } from "../../Redux/store";
 import { devDeleteDialog } from "../../Requests";
 
 const DebugMenu = () => {

@@ -65,6 +65,8 @@ const PhotoMessage = ({
     />
   );
 };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VideoMessage = () => {
   return (
     <MessageBox
@@ -97,7 +99,7 @@ const LoadMoreSection = (props: { showLoadMore: boolean; onLoadMore: any }) => {
 
 const InputSection = ({ dialogId, opponentId, full_name }) => {
   const [input, setInput] = useState("");
-  const lastInput = usePrevValue(input);
+
   console.log("input", input);
   useEffect(() => {
     if (input) {
@@ -108,6 +110,7 @@ const InputSection = ({ dialogId, opponentId, full_name }) => {
       PromisedQb.sendIsTyping(false, opponentId);
       // stop send ins typing
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input]);
   const { mutateAsync } = useMutationSendMessage({ dialogId });
   const userIsTyping = useAppSelector((state) => state.Quickblox.userIsTyping);
@@ -116,6 +119,7 @@ const InputSection = ({ dialogId, opponentId, full_name }) => {
     if (parsed?.[opponentId]) {
       return true;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userIsTyping]);
   function onSendMessage() {
     mutateAsync(
@@ -245,14 +249,18 @@ const Chat = () => {
           return <TextMessage {...{ message, extraProps }} />;
         case "photo":
           return <PhotoMessage {...{ message, extraProps }} />;
+        default:
+          return <></>;
       }
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messagesResponse]);
 
   useEffect(() => {
     if (prevContact !== selectedProfile) {
       //firstMount = false;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProfile]);
 
   async function onLoadMore() {

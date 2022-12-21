@@ -4,10 +4,8 @@ import {
   Card,
   FormHelperText,
   FormLabel,
-  Grid,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { Stack } from "@mui/system";
 import { useQueryFirebaseUserData } from "../../ReactQuery";

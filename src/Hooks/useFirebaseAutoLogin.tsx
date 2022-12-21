@@ -31,6 +31,8 @@ export const useFirebaseAutoLogin = () => {
     if (isSignInWithEmailLink) {
       onAutoLogin(isSignInWithEmailLink);
     }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return <></>;
 };

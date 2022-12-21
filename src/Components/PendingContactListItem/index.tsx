@@ -72,7 +72,7 @@ const PendingContactListItem = ({
   onReject?: (a?: any) => void;
 }) => {
   const theme = useTheme();
-  const { full_name, email, id } = item.user || {};
+  const { full_name, id } = item.user || {};
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile
   );

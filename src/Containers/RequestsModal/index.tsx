@@ -27,6 +27,8 @@ export const RequestsModal = () => {
     if (isStale || !isFetched) {
       refetch();
     }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const { mutateAsync: updateRelationshipMutation } =
     useMutationUpdateRelationship();

@@ -333,7 +333,7 @@ function onMessageListener(
   if (!dialog_id) {
     return;
   }
-  const formatMessage = {
+  /*const formatMessage = {
     _id: msg.id,
     all_read: false,
     attachments: [],
@@ -347,7 +347,7 @@ function onMessageListener(
     sender_id: userId,
     updated_at: msg.extension.date_sent,
     read: 0,
-  };
+  };*/
 
   const key = ["messages", dialog_id];
   const messagesQuery = queryClient.getQueryData(key);

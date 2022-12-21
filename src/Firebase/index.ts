@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+//import { getMessaging, getToken } from "firebase/messaging";
 
 import {
   getAuth,
@@ -33,8 +33,7 @@ const firebaseConfig = {
   measurementId: "G-ZSL6JWG45F",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 const auth = getAuth();
 
 console.log("auth", auth);
@@ -92,6 +91,7 @@ export const FirebaseActions = {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.log("err", `${errorCode} ${errorMessage}`);
       });
   },
   isSignInWithEmailLink: () => {

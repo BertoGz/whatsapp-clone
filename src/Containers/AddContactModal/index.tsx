@@ -7,7 +7,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo, useState } from "react";
-import { InitQbChatListeners } from "../../Quickblox";
 import { useMutationSendFriendRequest } from "../../ReactQuery/Mutations/useMutationSendFriendRequest";
 
 export const AddContactModal = () => {

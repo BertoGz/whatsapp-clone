@@ -1,5 +1,4 @@
 import { useQuery } from "react-query";
-import { clientData } from "..";
 import { PromisedQb } from "../../Quickblox";
 import { useAppSelector } from "../../Redux/useAppSelector";
 import { getMyRelationshipsRequest } from "../../Requests";

@@ -126,6 +126,7 @@ const SignInContents = () => {
           }}
         >
           <img
+            alt="logo"
             src={logo}
             style={{
               width: "300px",
@@ -207,6 +208,7 @@ const Login = () => {
         <Box sx={{ position: "relative" }}>
           <Box>
             <img
+              alt="splash"
               src={image}
               style={{ width: "90%", height: "90%", objectFit: "contain" }}
             />

@@ -2,7 +2,6 @@ import React from "react";
 import {
   Avatar,
   Button,
-  ButtonBase,
   Divider,
   Typography,
   useTheme,
@@ -76,7 +75,7 @@ const ContactListItem = ({
   const contrastText = colorHelper.contrastText("secondaryMain");
   const highlightColor = colorHelper.lightenColor("secondaryMain", 0.001);
   const { user, dialog } = item || {};
-  const { full_name, email, id } = user || {};
+  const { full_name, id } = user || {};
   const { last_message } = dialog || {};
   const selectedProfile = useAppSelector(
     (state) => state.AppState.selectedProfile

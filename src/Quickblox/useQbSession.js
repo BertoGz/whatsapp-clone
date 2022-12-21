@@ -2,7 +2,6 @@ import * as QB from "quickblox/quickblox";
 import { useEffect } from "react";
 import { PromisedQb } from ".";
 import { useQueryFirebaseUserData } from "../ReactQuery";
-import { useMutationLogout } from "../ReactQuery/Mutations/useMutationLogout";
 import {
   setAppSessionInvalid,
   setAppSessionValid,
@@ -99,12 +98,14 @@ export const useQbSession = () => {
     if (qbInitialized === null && userData) {
       tryQbInit();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qbInitialized, userData]);
 
   useEffect(() => {
     if (qbInitialized && !appSessionValid) {
       tryCreateAppSession();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qbInitialized, appSessionValid]);
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export const useQbSession = () => {
       //  debugger
       tryCreateUserSession();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appSessionValid, userSessionValid]);
   useEffect(() => {
     if (userSessionValid === false) {

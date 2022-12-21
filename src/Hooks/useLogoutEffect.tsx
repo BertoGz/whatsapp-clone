@@ -32,6 +32,8 @@ export const useLoggoutEffect = () => {
     if (userData) {
       dispatch(setIsLoggedOn(true));
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData]);
 
   useEffect(() => {
@@ -39,6 +41,7 @@ export const useLoggoutEffect = () => {
       dispatch(resetAppState());
       dispatch(resetQbState());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedOn]);
 
   return <></>;

@@ -1,10 +1,7 @@
 import moment from "moment";
 import { useEffect } from "react";
 import { connectChat, InitQbChatListeners, PromisedQb } from ".";
-import {
-  useQueryFirebaseUserData,
-  useQueryQuickbloxUserData,
-} from "../ReactQuery";
+import { useQueryFirebaseUserData } from "../ReactQuery";
 import { setChatListenersInit, setQbServiceFailure } from "../Redux/Quickblox";
 import { useAppDispatch } from "../Redux/useAppDispatch";
 import { useAppSelector } from "../Redux/useAppSelector";
@@ -86,11 +83,13 @@ export const useQbChat = () => {
       InitQbChatListeners();
       dispatch(setChatListenersInit());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSessionValid, chatListenersInit]);
   useEffect(() => {
     if (userSessionValid && !chatConnected) {
       tryConnectChat();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userSessionValid, chatConnected]);
   return <></>;
 };
